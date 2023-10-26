@@ -24,7 +24,7 @@
   "forwardPorts": [],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "yarn install && go install github.com/mitranim/gow@latest && docker compose -f ./manifests/anthaathi-dev/docker-compose.yml up -d && dotnet tool install --global dotnet-ef && bash tools/upgrade-db.sh",
+  "postCreateCommand": "yarn install && docker compose -f ./manifests/anthaathi-dev/compose.yml up -d",
 
   // Configure tool-specific properties.
   "customizations": {
@@ -38,8 +38,7 @@
   },
 
   "containerEnv": {
-    "PG_FORM_CONNECTION_STRING": "Host=localhost;Database=anthaathi_forms;Username=postgres;Password=pgpassword;Port=1143",
-    "PG_ORGANIZATION_CONNECTION_STRING": "Host=localhost;Database=anthaathi_tenant;Username=postgres;Password=pgpassword;Port=1143"
+    "DATABASE_URL": "postgres://postgres:pgpassword@localhost:1143"
   }
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.

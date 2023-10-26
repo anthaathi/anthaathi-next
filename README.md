@@ -19,14 +19,17 @@
 - [Node.js](https://nodejs.org/en/) (lts)
 - [Yarn](https://yarnpkg.com/) (3.x.x)
 - [Docker](https://www.docker.com/) (latest)
-- [GoLang](https://golang.org/) (1.20.4)
-- [Dotnet](https://dotnet.microsoft.com/) (6.0)
-
+- [Caddy](https://caddyserver.com/docs/install)
 
 ### Installation
 
 ```shell
-kratos serve -c manifests/anthaathi-dev/config/kratos/kratos.yml
+# Install caddy for your OS
+# Install Kratos
+
+# Run required docker compose for postgres and kratos service
+docker compose -f ./manifests/anthaathi-dev/compose.yml up -d
+
 # Run this command in new tab
 yarn
 yarn workspace @anthaathi/graphql-gateway db:migrate
