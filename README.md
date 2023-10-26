@@ -30,6 +30,8 @@
 # Run required docker compose for postgres and kratos service
 docker compose -f ./manifests/anthaathi-dev/compose.yml up -d
 
+export DATABASE_URL=postgres://postgres:pgpassword@localhost:1143
+
 # Run this command in new tab
 yarn
 yarn workspace @anthaathi/graphql-gateway db:migrate
