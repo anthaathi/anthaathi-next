@@ -1,0 +1,4 @@
+- pipeline.id: push_customer_to_elastic
+  path.config: "task.conf"
+- pipeline.id: push_user_to_elastic
+  path.config: "user.conf"

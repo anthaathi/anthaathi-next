@@ -1,0 +1,12 @@
+grafana.ini:
+  server:
+    domain: "dash.${ROOT_DOMAIN}"
+    protocol: http
+    root_url: https://%(domain)s
+  auth.proxy:
+    enabled: true
+tolerations:
+  - key: spotInstance
+    operator: Equal
+    value: 'true'
+    effect: NoSchedule

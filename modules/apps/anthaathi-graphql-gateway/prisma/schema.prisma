@@ -1,0 +1,640 @@
+generator client {
+	provider        = "prisma-client-js"
+	previewFeatures = ["multiSchema", "tracing"]
+	output          = "../src/generated/client"
+	binaryTargets   = ["native"]
+}
+
+generator pothos {
+	provider = "prisma-pothos-types"
+	output   = "../src/generated/pothos.ts"
+}
+
+datasource db {
+	provider          = "postgresql"
+	url               = env("DATABASE_URL")
+	shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+	schemas           = ["organization", "file", "common", "crm", "project", "task", "esg"]
+}
+
+model File {
+	id           Int            @id @default(autoincrement())
+	url          String
+	checksum     String
+	byteSize     Int            @map("byte_size")
+	metadata     String
+	serviceName  String         @map("service_name")
+	fileName     String         @map("file_name")
+	mimeType     String         @map("mime_type")
+	encoding     String
+	createdAt    DateTime       @default(now()) @map("created_at")
+	updatedAt    DateTime       @updatedAt @map("updated_at")
+	taskTemplate TaskTemplate[]
+
+	@@map("file")
+	@@schema("file")
+}
+
+model Address {
+	id               Int     @id @default(autoincrement())
+	title            String  @db.VarChar(255)
+	landmark         String?
+	street           String?
+	city             String?
+	state            String?
+	country          String? @db.VarChar(20)
+	zipCode          String? @map("zip_code") @db.VarChar(255)
+	technicalContact String? @map("technical_contact")
+
+	customer   Customer? @relation(fields: [customerId], references: [id])
+	customerId Int?      @map("customer_id")
+
+	organization   Organization? @relation(fields: [organizationId], references: [id])
+	organizationId String?       @map("organization_id") @db.Uuid
+
+	customerOrganization   CustomerOrganization? @relation(fields: [customerOrganizationId], references: [id])
+	customerOrganizationId Int?                  @map("customer_organization_id")
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("address")
+	@@schema("common")
+}
+
+model OrganizationTemplate {
+	id Int @id @default(autoincrement())
+
+	name        String  @db.VarChar(255)
+	description String?
+	config      Json    @db.Json
+
+	createdAt    DateTime       @default(now()) @map("created_at")
+	updatedAt    DateTime       @updatedAt @map("updated_at")
+	organization Organization[]
+
+	@@map("organization_template")
+	@@schema("organization")
+}
+
+model Organization {
+	id          String    @id @default(uuid()) @db.Uuid
+	name        String    @db.VarChar(1000)
+	description String?
+	key         String    @unique
+	data        Json      @db.JsonB
+	address     Address[]
+
+	template                     OrganizationTemplate           @relation(fields: [templateId], references: [id])
+	templateId                   Int                            @map("template_id")
+	customerTemplate             CustomerTemplate[]
+	customer                     Customer[]
+	project                      Project[]
+	taskTemplate                 TaskTemplate[]
+	taskStatus                   TaskStatus[]
+	task                         Task[]
+	taskLabel                    TaskLabel[]
+	recentOrganization           RecentOrganization[]
+	customerOrganizationTemplate CustomerOrganizationTemplate[]
+	createdAt                    DateTime                       @default(now()) @map("created_at")
+	updatedAt                    DateTime                       @updatedAt @map("updated_at")
+	group                        Group[]
+	customerGroup                CustomerGroup[]
+	taskFeedbackForm             TaskFeedbackForm[]
+	Order                        Order[]
+
+	@@index([key])
+	@@map("organization")
+	@@schema("organization")
+}
+
+model RecentOrganization {
+	id Int @id @default(autoincrement())
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+
+	userId    String   @map("user_id") @db.Uuid
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("recent_organization")
+	@@schema("organization")
+}
+
+model GroupTemplate {
+	id          Int      @id @default(autoincrement())
+	name        String   @db.VarChar(255)
+	description String?
+	config      Json     @db.Json
+	createdAt   DateTime @default(now()) @map("created_at")
+	updatedAt   DateTime @updatedAt @map("updated_at")
+	group       Group[]
+
+	@@map("group_template")
+	@@schema("organization")
+}
+
+model Group {
+	id                Int                 @id @default(autoincrement())
+	name              String
+	description       String?
+	data              Json                @db.Json
+	taskAssignedGroup TaskAssignedGroup[]
+	groupMembership   GroupMembership[]
+	createdAt         DateTime            @default(now()) @map("created_at")
+	updatedAt         DateTime            @updatedAt @map("updated_at")
+	organization      Organization        @relation(fields: [organizationId], references: [id])
+	organizationId    String              @map("organization_id") @db.Uuid
+
+	template        GroupTemplate @relation(fields: [groupTemplateId], references: [id])
+	groupTemplateId Int           @map("group_template_id")
+
+	@@map("group")
+	@@schema("organization")
+}
+
+model GroupMembership {
+	id Int @id @default(autoincrement())
+
+	group   Group @relation(fields: [groupId], references: [id])
+	groupId Int   @map("group_id")
+
+	user      String   @db.Uuid
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@unique([groupId, user])
+	@@map("group_membership")
+	@@schema("organization")
+}
+
+model RecentlyContactedUser {
+	id              Int      @id @default(autoincrement())
+	user            String   @db.Uuid
+	contactedUserId String   @map("contacted_user_id") @db.Uuid
+	searchQuery     String?  @map("search_query")
+	createdAt       DateTime @default(now()) @map("created_at")
+	email           String
+
+	@@unique([user, contactedUserId])
+	@@map("recently_contacted_user")
+	@@schema("common")
+}
+
+model CustomerTemplate {
+	id             Int          @id @default(autoincrement())
+	name           String       @db.VarChar(255)
+	description    String?
+	config         Json         @db.Json
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+	createdAt      DateTime     @default(now()) @map("created_at")
+	updatedAt      DateTime     @updatedAt @map("updated_at")
+	customer       Customer[]
+
+	@@map("customer_template")
+	@@schema("crm")
+}
+
+model CustomerOrganizationTemplate {
+	id          Int     @id @default(autoincrement())
+	name        String  @db.VarChar(255)
+	description String?
+	config      Json    @db.Json
+
+	organization         Organization           @relation(fields: [organizationId], references: [id])
+	organizationId       String                 @map("organization_id") @db.Uuid
+	customerOrganization CustomerOrganization[]
+	createdAt            DateTime               @default(now()) @map("created_at")
+	updatedAt            DateTime               @updatedAt @map("updated_at")
+
+	@@map("customer_organization_template")
+	@@schema("crm")
+}
+
+model CustomerOrganization {
+	id      Int       @id @default(autoincrement())
+	name    String    @db.VarChar(255)
+	address Address[]
+
+	template CustomerOrganizationTemplate @relation(fields: [customerOrganizationTemplateId], references: [id])
+
+	data                           Json     @db.JsonB
+	customerOrganizationTemplateId Int      @map("customer_organization_template_id")
+	createdAt                      DateTime @default(now()) @map("created_at")
+	updatedAt                      DateTime @updatedAt @map("updated_at")
+
+	@@map("customer_organization")
+	@@schema("crm")
+}
+
+enum CustomerGroupType {
+	Static
+	Dynamic
+
+	@@schema("crm")
+}
+
+model CustomerGroup {
+	id               Int                        @id @default(autoincrement())
+	title            String
+	description      String?
+	type             CustomerGroupType          @map("type")
+	condition        Json?                      @db.JsonB
+	groupAssociation CustomerGroupAssociation[]
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("customer_group")
+	@@schema("crm")
+}
+
+model CustomerGroupAssociation {
+	id Int @id @default(autoincrement())
+
+	customerGroup   CustomerGroup @relation(fields: [customerGroupId], references: [id])
+	customerGroupId Int           @map("customer_group_id")
+
+	customer   Customer @relation(fields: [customerId], references: [id])
+	customerId Int      @map("customer_id")
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("customer_group_association")
+	@@schema("crm")
+}
+
+model Customer {
+	id   Int    @id @default(autoincrement())
+	name String @db.VarChar(1024)
+
+	firstName   String? @map("first_name") @db.VarChar(512)
+	lastName    String? @map("last_name") @db.VarChar(512)
+	email       String?
+	data        Json    @db.JsonB
+	phoneNumber String? @map("phone_number") @db.VarChar(255)
+	company     String? @db.VarChar(1024)
+
+	userId String? @map("user_id") @db.Uuid
+
+	template           CustomerTemplate? @relation(fields: [customerTemplateId], references: [id])
+	customerTemplateId Int?              @map("customer_template_id")
+
+	addresses Address[]
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+
+	taskRefferedBy           TaskRefferedBy[]
+	task                     Task[]
+	createdAt                DateTime                   @default(now()) @map("created_at")
+	updatedAt                DateTime                   @updatedAt @map("updated_at")
+	customerGroupAssociation CustomerGroupAssociation[]
+
+	@@map("customer")
+	@@schema("crm")
+}
+
+model ProjectTemplate {
+	id     Int         @id @default(autoincrement())
+	name   String      @db.VarChar(255)
+	config Json        @db.Json
+	data   Json        @db.Json
+	type   ProjectType @map("type")
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("project_template")
+	@@schema("project")
+}
+
+model Project {
+	id          Int     @id @default(autoincrement())
+	name        String  @db.VarChar(255)
+	description String?
+	data        Json    @db.Json
+
+	type ProjectType @map("type")
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+	taskStatus     TaskStatus[]
+	task           Task[]
+	taskLabel      TaskLabel[]
+	createdAt      DateTime     @default(now()) @map("created_at")
+	updatedAt      DateTime     @updatedAt @map("updated_at")
+
+	@@map("project")
+	@@schema("project")
+}
+
+enum ProjectType {
+	Task
+
+	@@schema("project")
+}
+
+model DefaultAssigned {
+	id Int @id @default(autoincrement())
+
+	taskTemplate TaskTemplate @relation(fields: [taskTemplateId], references: [id])
+	userId       String       @map("user_id") @db.Uuid
+
+	createdAt      DateTime @default(now()) @map("created_at")
+	updatedAt      DateTime @updatedAt @map("updated_at")
+	taskTemplateId Int      @map("task_template_id")
+
+	@@map("default_assigned")
+	@@schema("task")
+}
+
+model TaskTemplate {
+	id          Int     @id @default(autoincrement())
+	name        String  @db.VarChar(255)
+	description String?
+	icon        File?   @relation(fields: [iconId], references: [id])
+	iconId      Int?    @map("icon_id")
+	config      Json    @default("{}") @db.Json
+
+	key String? @unique
+
+	autoAssignToSelf Boolean @default(false) @map("auto_assign_to_self")
+
+	defaultAssigned DefaultAssigned[]
+
+	// Task template is a custom template for the task title
+	titleTemplate String? @map("title_template")
+
+	// Task template is a custom template for the task description
+	descriptionTemplate String? @map("description_template")
+
+	feedbackForm    TaskFeedbackForm? @relation(fields: [taskFeedbackFormId], references: [id])
+	feedbackEnabled Boolean           @default(false) @map("feedback_enabled")
+
+	organization       Organization? @relation(fields: [organizationId], references: [id])
+	organizationId     String?       @map("organization_id") @db.Uuid
+	task               Task[]
+	createdAt          DateTime      @default(now()) @map("created_at")
+	updatedAt          DateTime      @updatedAt @map("updated_at")
+	taskFeedbackFormId Int?          @map("task_feedback_form_id")
+
+	@@map("task_template")
+	@@schema("task")
+}
+
+enum SystemStatus {
+	Done
+	Pending
+	Blocked
+	InProgress
+	Rejected
+
+	@@schema("task")
+}
+
+model TaskStatus {
+	id Int @id @default(autoincrement())
+
+	name        String  @db.VarChar(255)
+	description String?
+	color       String  @db.VarChar(255)
+
+	organization   Organization? @relation(fields: [organizationId], references: [id])
+	organizationId String?       @map("organization_id") @db.Uuid
+
+	project   Project? @relation(fields: [projectId], references: [id])
+	projectId Int?     @map("project_id")
+	task      Task[]
+
+	systemStatus SystemStatus? @map("system_status")
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("task_status")
+	@@schema("task")
+}
+
+model TaskFeedbackForm {
+	id             Int          @id @default(autoincrement())
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+	form           Json         @db.Json
+
+	createdAt    DateTime       @default(now()) @map("created_at")
+	updatedAt    DateTime       @updatedAt @map("updated_at")
+	task         Task[]
+	taskTemplate TaskTemplate[]
+
+	@@map("task_feedback_form")
+	@@schema("task")
+}
+
+model TaskFeedbackSubmission {
+	id Int @id @default(autoincrement())
+
+	task Task @relation(fields: [taskId], references: [id])
+	data Json @db.JsonB
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+	taskId    Int      @map("task_id")
+
+	@@unique([taskId])
+	@@map("task_feedback_submission")
+	@@schema("task")
+}
+
+model Task {
+	id Int @id @default(autoincrement())
+
+	feedbackEnabled          Boolean           @default(false) @map("feedback_enabled")
+	taskFeedbackForm         TaskFeedbackForm? @relation(fields: [taskFeedbackFormId], references: [id])
+	taskFeedbackFormId       Int?              @map("task_feedback_form_id")
+	taskFeedbackSubmissionId String?           @default(uuid()) @map("task_feedback_submission_id") @db.Uuid
+	feedbackSubmittedAt      DateTime?         @map("feedback_submitted_at")
+
+	title       String    @db.VarChar(1024)
+	description String?
+	data        Json      @db.JsonB
+	author      String    @db.Uuid
+	priority    String?   @db.VarChar(255)
+	dueDate     DateTime? @map("due_date")
+	startDate   DateTime? @default(now()) @map("start_date")
+	emoji       String?   @db.VarChar(100)
+
+	project   Project? @relation(fields: [projectId], references: [id])
+	projectId Int?     @map("project_id")
+
+	status   TaskStatus? @relation(fields: [statusId], references: [id])
+	statusId Int?        @map("status_id")
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+
+	template       TaskTemplate @relation(fields: [taskTemplateId], references: [id])
+	taskTemplateId Int          @map("task_template_id")
+
+	label TaskLabel[]
+
+	blockedBy     TaskDependency[]
+	assignedUser  TaskAssignedUser[]
+	assignedGroup TaskAssignedGroup[]
+
+	subTasks     Task[] @relation("parent_task_fk")
+	parentTask   Task?  @relation(fields: [parentTaskId], references: [id], name: "parent_task_fk")
+	parentTaskId Int?   @map("parent_task_id")
+
+	taskUpvotes TaskUpvotes[]
+	taskComment TaskComment[]
+
+	customer Customer? @relation(fields: [customerId], references: [id])
+
+	taskRefferedBy         TaskRefferedBy[]
+	customerId             Int?                     @map("customer_id")
+	createdAt              DateTime                 @default(now()) @map("created_at")
+	updatedAt              DateTime                 @updatedAt @map("updated_at")
+	taskFeedbackSubmission TaskFeedbackSubmission[]
+
+	@@map("task")
+	@@schema("task")
+}
+
+model TaskRefferedBy {
+	id Int @id @default(autoincrement())
+
+	task   Task @relation(fields: [taskId], references: [id])
+	taskId Int  @map("task_id")
+
+	customer   Customer @relation(fields: [customerId], references: [id])
+	customerId Int      @map("customer_id")
+	createdAt  DateTime @default(now()) @map("created_at")
+	updatedAt  DateTime @updatedAt @map("updated_at")
+
+	@@map("task_reffered_by")
+	@@schema("task")
+}
+
+model TaskComment {
+	id Int @id @default(autoincrement())
+
+	task   Task @relation(fields: [taskId], references: [id])
+	taskId Int  @map("task_id")
+
+	user String? @db.Uuid
+
+	content String
+
+	isSystem  Boolean  @default(false) @map("is_system")
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("task_comment")
+	@@schema("task")
+}
+
+model TaskUpvotes {
+	id Int @id @default(autoincrement())
+
+	task   Task @relation(fields: [taskId], references: [id])
+	taskId Int  @map("task_id")
+
+	user      String   @db.Uuid
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("task_upvotes")
+	@@schema("task")
+}
+
+model TaskDependency {
+	id        Int      @id @default(autoincrement())
+	task      Task?    @relation(fields: [taskId], references: [id])
+	taskId    Int?     @map("task_id")
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("task_dependency")
+	@@schema("task")
+}
+
+model TaskLabel {
+	id          Int     @id @default(autoincrement())
+	name        String  @db.VarChar(255)
+	description String?
+	color       String  @db.VarChar(255)
+
+	project   Project @relation(fields: [projectId], references: [id])
+	projectId Int     @map("project_id")
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @map("organization_id") @db.Uuid
+	task           Task?        @relation(fields: [taskId], references: [id])
+	taskId         Int?         @map("task_id")
+	createdAt      DateTime     @default(now()) @map("created_at")
+	updatedAt      DateTime     @updatedAt @map("updated_at")
+
+	@@map("task_label")
+	@@schema("task")
+}
+
+model TaskAssignedUser {
+	id Int @id @default(autoincrement())
+
+	task   Task @relation(fields: [taskId], references: [id])
+	taskId Int  @map("task_id")
+
+	user      String   @db.Uuid
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@unique([taskId, user])
+	@@map("task_assigned_user")
+	@@schema("task")
+}
+
+model TaskAssignedGroup {
+	id Int @id @default(autoincrement())
+
+	task   Task @relation(fields: [taskId], references: [id])
+	taskId Int  @map("task_id")
+
+	group     Group    @relation(fields: [groupId], references: [id])
+	groupId   Int      @map("group_id")
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("task_assigned_group")
+	@@schema("task")
+}
+
+model Order {
+	id Int @id @default(autoincrement())
+
+	organization   Organization @relation(fields: [organizationId], references: [id])
+	organizationId String       @db.Uuid
+
+	currencyCode String @map("currency_code") @db.VarChar(10)
+
+	discount               Decimal @db.Money
+	shipping               Decimal @db.Money
+	subtotal               Decimal @db.Money
+	subtotalIncludingTax   Decimal @map("subtotal_incl_tax") @db.Money
+	tax                    Decimal @db.Money
+	totalQty               Int     @map("total_qty")
+	shippingInclTax        Decimal @map("shipping_incl_tax") @db.Money
+	shippingDiscountAmount Decimal @map("shipping_discount_amount") @db.Money
+
+	createdAt DateTime @default(now()) @map("created_at")
+	updatedAt DateTime @updatedAt @map("updated_at")
+
+	@@map("order")
+	@@schema("esg")
+}

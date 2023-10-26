@@ -1,0 +1,63 @@
+oathkeeper:
+  config:
+    log:
+      level: debug
+      format: json
+
+    access_rules:
+      matching_strategy: glob
+      repositories:
+        - file:///etc/secrets/authz-grafana/grafana-access-rules.yml
+
+    errors:
+      fallback:
+        - json
+
+      handlers:
+        redirect:
+          enabled: true
+          config:
+            to: https://auth.${ROOT_DOMAIN}/v1/sign-in
+            when:
+              - error:
+                  - unauthorized
+                  - forbidden
+                request:
+                  header:
+                    accept:
+                      - text/html
+        json:
+          enabled: true
+          config:
+            verbose: true
+
+    authenticators:
+      anonymous:
+        enabled: true
+        config:
+          subject: guest
+
+      cookie_session:
+        enabled: true
+        config:
+          check_session_url: "http://kratos-public.${PREFIX}-auth.svc.cluster.local/sessions/whoami"
+          preserve_path: true
+          extra_from: "@this"
+          subject_from: "identity.id"
+          only:
+            - ${PREFIX}_anthaathi_session
+
+    authorizers:
+      allow:
+        enabled: true
+
+    mutators:
+      noop:
+        enabled: true
+      header:
+        # Set enabled to true if the authenticator should be enabled and false to disable the authenticator. Defaults to false.
+        enabled: true
+        config:
+          headers:
+            x-proxy-user: "{{ print .Subject }}"
+            x-proxy-roles: "{{ print .Extra.roles }}"

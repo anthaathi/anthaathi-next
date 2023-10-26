@@ -1,0 +1,69 @@
+version: '3.2'
+services:
+  common_pg:
+    image: postgres:14-alpine
+    restart: always
+    ports:
+      - '1143:5432'
+    environment:
+      POSTGRES_PASSWORD: pgpassword
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  kratos-migrate:
+    image: oryd/kratos:latest
+    depends_on:
+      common_pg:
+        condition: service_healthy
+    environment:
+      - DSN=postgres://postgres:pgpassword@common_pg:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      - TRACING_PROVIDER=jaeger
+      ### Jaeger ###
+      - TRACING_PROVIDERS_JAEGER_SAMPLING_SERVER_URL=http://jaeger:5778/sampling
+      - TRACING_PROVIDERS_JAEGER_LOCAL_AGENT_ADDRESS=jaeger:5778
+    volumes:
+      - type: bind
+        source: ./config/kratos
+        target: /etc/config/kratos
+    command: -c /etc/config/kratos/kratos-docker.yml migrate sql -e --yes
+    restart: on-failure
+
+  kratos:
+    depends_on:
+      - kratos-migrate
+    image: oryd/kratos:latest
+    ports:
+      - '4433:4433' # public
+      - '4434:4434' # admin
+    restart: unless-stopped
+    environment:
+      - DSN=postgres://postgres:pgpassword@common_pg:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+      - LOG_LEVEL=trace
+    command: serve -c /etc/config/kratos/kratos-docker.yml --dev --watch-courier
+    volumes:
+      - type: bind
+        source: ./config/kratos
+        target: /etc/config/kratos
+
+  mailslurper:
+    image: rnwood/smtp4dev
+    ports:
+      - '4436:80'
+      - '2525:25'
+    platform: linux/amd64
+
+  tusd:
+    image: tusproject/tusd:latest
+    ports:
+      - '1080:1080'
+    command:
+      - tusd
+
+volumes:
+  db:

@@ -1,0 +1,20 @@
+image:
+  registry: public.ecr.aws
+  repository: d8h9n2n4/bitnami-logstash-opensearch-postgres
+initContainers:
+  - name: download-pg-driver
+    image: alpine:latest
+    command: [ "/bin/sh", "-c" ]
+    args:
+      - wget -O /driver/postgresql.jar https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
+    volumeMounts:
+      - name: postgres-driver
+        mountPath: /driver
+
+extraVolumeMounts:
+  - name: postgres-driver
+    mountPath: /opt/bitnami/logstash/logstash-core/lib/jars/test
+
+extraVolumes:
+  - name: postgres-driver
+    emptyDir: { }

@@ -1,0 +1,1 @@
+export { BrandingHeader } from './index';

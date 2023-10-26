@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "logstash.fullname" . }}
+  labels:
+    {{- include "logstash.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "logstash.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "logstash.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "logstash.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: download-pg-driver
+          image: alpine:latest
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - wget -O /driver/postgresql.jar https://jdbc.postgresql.org/download/postgresql-42.6.0.jar
+          volumeMounts:
+            - name: postgres-driver
+              mountPath: /driver
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CONFIG_SUPPORT_ESCAPE
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: logstash-secret
+          volumeMounts:
+            - mountPath: /usr/share/logstash/config/pipelines.yml
+              name: logstash
+              subPath: pipelines.yml
+            - mountPath: /usr/share/logstash/pipeline
+              name: logstash-pipelines
+            - mountPath: /usr/share/logstash/logstash-core/lib/jars/pg
+              name: postgres-driver
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: logstash
+          configMap:
+            name: {{ .Values.configMap }}
+            items:
+              - key: logstash.yml
+                path: pipelines.yml
+        - name: logstash-pipelines
+          configMap:
+            name: {{ .Values.configMapPipelines }}
+        - name: postgres-driver
+          emptyDir: { }

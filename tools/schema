@@ -1,0 +1,8 @@
+model
+  schema 1.1
+type user
+type organization
+  relations
+    define owner: [user] 
+    define editor: [user] or owner
+    define viewer: [user] or editor

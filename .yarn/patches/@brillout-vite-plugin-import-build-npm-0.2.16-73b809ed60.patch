@@ -1,0 +1,29 @@
+diff --git a/dist/plugin/index.js b/dist/plugin/index.js
+index a96b094344a60a59df47adf8dc65c6b0dc7e3ecc..8a0f33421f8d0af2cd469dba4e398f2c34ddc464 100644
+--- a/dist/plugin/index.js
++++ b/dist/plugin/index.js
+@@ -46,8 +46,9 @@ function resolveConfig(configUnprocessed, options) {
+         libraries: [],
+         importerAlreadyGenerated: false,
+         configVersion,
+-        disableAutoImporter: false
++        disableAutoImporter: true
+     };
++    console.log(data);
+     (0, utils_1.assert)(data.configVersion === 1);
+     (0, utils_1.assert)(configVersion === 1);
+     if (data.configVersion !== configVersion) {
+@@ -117,9 +118,12 @@ function resetAutoImporter() {
+     }
+     catch (_a) { }
+ }
++function patchFixYarn() {
++    return true;
++}
+ function autoImporterIsDisabled(config) {
+     var _a;
+-    return (_a = config._vitePluginImportBuild.disableAutoImporter) !== null && _a !== void 0 ? _a : (0, utils_1.isYarnPnP)();
++    return (_a = config._vitePluginImportBuild.disableAutoImporter) !== null && _a !== void 0 ? _a : (0, patchFixYarn)();
+ }
+ function isUsingOlderVitePluginImportBuildVersion(config) {
+     return config._vitePluginImportBuild.libraries.some((library) => {

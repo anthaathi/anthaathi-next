@@ -1,0 +1,2080 @@
+# This file was generated. Do not edit manually.
+
+schema {
+	query: Query
+	mutation: Mutation
+}
+
+interface IUserErrors {
+	code: String!
+	message: String!
+}
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+	id: ID!
+}
+
+union AddMemberToGroupError = AlreadyExistsError | UnauthorizedAccessError
+
+union CreateContactError = UnauthorizedAccessError
+
+union CreateContactGroupError = UnauthorizedAccessError
+
+union CreateGroupError = AlreadyExistsError | UnauthorizedAccessError
+
+union CreateNewFormStatusError = AlreadyExistsError
+
+union CreateNotificationChannelError = AlreadyExistsError | UnauthorizedAccessError
+
+union CreateNotificationTemplateError = AlreadyExistsError
+
+union CreateOrganizationError = AlreadyExistsError | UnauthorizedAccessError
+
+union CreateUserAndAddToOrganizationError = AlreadyExistsError | UnauthorizedAccessError
+
+union DeleteNotificationChannelError = UnauthorizedAccessError
+
+union InviteUserToOrganizationError = AlreadyExistsError | NotFoundError | UnauthorizedAccessError
+
+union UpdateNotificationChannelError = UnauthorizedAccessError
+
+union UpdateNotificationTemplateError = UnauthorizedAccessError
+
+type AddMemberToGroupPayload {
+	errors: [AddMemberToGroupError!]
+	groupMember: GroupMember
+	query: Query!
+}
+
+type AddNewCommentPayload {
+	formComment: FormComment
+	query: Query!
+}
+
+type AlreadyExistsError implements IUserErrors {
+	code: String!
+	message: String!
+}
+
+"A connection to a list of items."
+type CommentsForFormSubmissionConnection {
+	"A list of edges."
+	edges: [CommentsForFormSubmissionEdge!]
+	"A flattened list of the nodes."
+	nodes: [FormComment!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type CommentsForFormSubmissionEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: FormComment!
+}
+
+type Contact implements Node {
+	attributes: String
+	avatarUrl: String
+	contactEmails: [ContactEmail!]!
+	contactGroup: ContactGroup
+	contactGroupId: Long
+	contactPhoneNumbers: [ContactPhoneNumber!]!
+	contactPushTokens: [ContactPushToken!]!
+	createdAt: DateTime!
+	externalUserId: String
+	firstName: String
+	id: ID!
+	lastName: String
+	locale: Locale!
+	localeId: String!
+	organizationId: UUID!
+	unsubscribeLists: [UnsubscribeList!]!
+	updatedAt: DateTime
+}
+
+type ContactEmail {
+	createdAt: DateTime!
+	email: String!
+	id: Long!
+	idContact: Long!
+	idContactNavigation: Contact!
+	organizationId: UUID!
+	updatedAt: DateTime
+}
+
+type ContactGroup implements Node {
+	contacts: [Contact!]!
+	createdAt: DateTime!
+	description: String
+	id: ID!
+	name: String!
+	organizationId: UUID!
+	updatedAt: DateTime
+}
+
+"A connection to a list of items."
+type ContactGroupsConnection {
+	"A list of edges."
+	edges: [ContactGroupsEdge!]
+	"A flattened list of the nodes."
+	nodes: [ContactGroup!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ContactGroupsEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: ContactGroup!
+}
+
+type ContactPhoneNumber {
+	countryCode: Short!
+	createdAt: DateTime!
+	id: Long!
+	idContact: Long!
+	idContactNavigation: Contact!
+	number: Long!
+	organizationId: UUID!
+	updatedAt: DateTime
+}
+
+type ContactPushToken {
+	createdAt: DateTime!
+	id: Long!
+	idContact: Long!
+	idContactNavigation: Contact!
+	organizationId: UUID!
+	token: String
+	updatedAt: DateTime
+}
+
+"A connection to a list of items."
+type ContactsConnection {
+	"A list of edges."
+	edges: [ContactsEdge!]
+	"A flattened list of the nodes."
+	nodes: [Contact!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ContactsEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: Contact!
+}
+
+type CreateContactGroupPayload {
+	contactGroup: ContactGroup
+	errors: [CreateContactGroupError!]
+	query: Query!
+}
+
+type CreateContactPayload {
+	contact: Contact
+	errors: [CreateContactError!]
+	query: Query!
+}
+
+type CreateFormSubmissionPayload {
+	formSubmission: FormSubmission
+	query: Query!
+}
+
+type CreateGroupPayload {
+	errors: [CreateGroupError!]
+	group: Group
+	query: Query!
+}
+
+type CreateNewFormStatusPayload {
+	errors: [CreateNewFormStatusError!]
+	formStatus: FormStatus
+	query: Query!
+}
+
+type CreateNotificationChannelPayload {
+	errors: [CreateNotificationChannelError!]
+	notificationChannel: NotificationChannel
+	query: Query!
+}
+
+type CreateNotificationTemplatePayload {
+	errors: [CreateNotificationTemplateError!]
+	notificationTemplate: NotificationTemplate
+	query: Query!
+}
+
+type CreateOrganizationPayload {
+	errors: [CreateOrganizationError!]
+	organization: Organization
+	query: Query!
+}
+
+type CreateUserAndAddToOrganizationPayload {
+	errors: [CreateUserAndAddToOrganizationError!]
+	organizationMember: OrganizationMember
+	query: Query!
+}
+
+type DataSource {
+	config: String!
+	createdAt: DateTime!
+	description: String!
+	id: Long!
+	name: String!
+	organizationId: UUID!
+	type: String!
+	updatedAt: DateTime
+}
+
+type DeleteNotificationChannelPayload {
+	errors: [DeleteNotificationChannelError!]
+	notificationChannel: NotificationChannel
+	query: Query!
+}
+
+type Form implements Node {
+	auditEnabled: Boolean!
+	config: String!
+	createdAt: DateTime!
+	createdBy: UUID
+	dateFormat: String!
+	description: String!
+	displayField: String!
+	formConfig: FormConfig
+	formSubmissions(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int
+	): FormSubmissionsConnection
+	id: ID!
+	language: String!
+	organizationId: UUID!
+	pinnedFields: [String!]!
+	title: String!
+	updatedAt: DateTime
+}
+
+type FormAssignmentUser implements Node {
+	assignedTo: UUID!
+	createdAt: DateTime!
+	id: ID!
+	idFormSubmission: Long!
+	idFormSubmissionNavigation: FormSubmission!
+	identity: User
+	organizationId: UUID!
+}
+
+type FormComment implements Node {
+	author: User
+	content: String!
+	createdAt: DateTime!
+	createdBy: UUID!
+	id: ID!
+	idFormSubmission: Long!
+	idFormSubmissionNavigation: FormSubmission!
+	message: String
+	organizationId: UUID!
+	updatedAt: DateTime
+}
+
+type FormConfig {
+	id: Long!
+	idNavigation: Form!
+}
+
+"A connection to a list of items."
+type FormConnection {
+	"A list of edges."
+	edges: [FormEdge!]
+	"A flattened list of the nodes."
+	nodes: [Form!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type FormEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: Form!
+}
+
+type FormStatus implements Node {
+	description: String
+	forms: [FormSubmission!]!
+	id: ID!
+	organizationId: UUID!
+	title: String!
+}
+
+"A connection to a list of items."
+type FormStatusConnection {
+	"A list of edges."
+	edges: [FormStatusEdge!]
+	"A flattened list of the nodes."
+	nodes: [FormStatus!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type FormStatusEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: FormStatus!
+}
+
+type FormSubmission implements Node {
+	comments: [FormComment!]!
+	createdAt: DateTime!
+	data: String!
+	deletedAt: DateTime
+	form: Form!
+	id: ID!
+	organizationId: UUID!
+	priority: String
+	revisions: [FormSubmissionRevision!]!
+	status: FormStatus
+	statusId: ID
+	tags: [FormSubmissionTag!]!
+	title: String!
+	updatedAt: DateTime
+	userFormAssignments: [FormAssignmentUser!]
+}
+
+"A connection to a list of items."
+type FormSubmissionConnection {
+	"A list of edges."
+	edges: [FormSubmissionEdge!]
+	"A flattened list of the nodes."
+	nodes: [FormSubmission!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type FormSubmissionEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: FormSubmission!
+}
+
+type FormSubmissionRevision implements Node {
+	author: User
+	authorId: UUID!
+	createdAt: DateTime!
+	id: ID!
+	idFormSubmission: Long!
+	idFormSubmissionNavigation: FormSubmission!
+	organizationId: UUID!
+	revision: String!
+	userIpAddress: String
+}
+
+type FormSubmissionTag {
+	id: Long!
+	idFormSubmission: Long!
+	idFormSubmissionNavigation: FormSubmission!
+	organizationId: UUID!
+	tag: String!
+}
+
+"A connection to a list of items."
+type FormSubmissionsConnection {
+	"A list of edges."
+	edges: [FormSubmissionsEdge!]
+	"A flattened list of the nodes."
+	nodes: [FormSubmission!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type FormSubmissionsEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: FormSubmission!
+}
+
+type Group implements Node {
+	data: String!
+	description: String
+	groupMembers: [GroupMember!]!
+	groupTemplate: GroupTemplate!
+	groupTemplateId: Long!
+	groups: [Group!]!
+	id: ID!
+	idOrganization: UUID!
+	name: String!
+	parentGroup: Group
+	parentGroupId: ID
+}
+
+type GroupMember implements Node {
+	createdAt: DateTime!
+	group: Group!
+	id: ID!
+	idUser: ID!
+	role: String!
+	updatedAt: DateTime!
+	user: User
+}
+
+"A connection to a list of items."
+type GroupMembersByGroupIdConnection {
+	"A list of edges."
+	edges: [GroupMembersByGroupIdEdge!]
+	"A flattened list of the nodes."
+	nodes: [GroupMember!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type GroupMembersByGroupIdEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: GroupMember!
+}
+
+type GroupTemplate implements Node {
+	config: String!
+	description: String
+	groups: [Group!]!
+	icon: String!
+	id: ID!
+	name: String!
+}
+
+"A connection to a list of items."
+type GroupsConnection {
+	"A list of edges."
+	edges: [GroupsEdge!]
+	"A flattened list of the nodes."
+	nodes: [Group!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type GroupsEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: Group!
+}
+
+"A connection to a list of items."
+type GroupsTemplateConnection {
+	"A list of edges."
+	edges: [GroupsTemplateEdge!]
+	"A flattened list of the nodes."
+	nodes: [GroupTemplate!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type GroupsTemplateEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: GroupTemplate!
+}
+
+type InviteUserToOrganizationPayload {
+	errors: [InviteUserToOrganizationError!]
+	organizationInvitation: OrganizationInvitation
+	query: Query!
+}
+
+type KpiFormInformation {
+	description: String
+	name: String!
+	value: String
+}
+
+type Locale implements Node {
+	contacts: [Contact!]!
+	id: ID!
+	name: String!
+	nameNative: String!
+	notificationTemplateContents: [NotificationTemplateContent!]!
+}
+
+"A connection to a list of items."
+type LocalesConnection {
+	"A list of edges."
+	edges: [LocalesEdge!]
+	"A flattened list of the nodes."
+	nodes: [Locale!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type LocalesEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: Locale!
+}
+
+type MoveToTrashPayload {
+	formSubmission: FormSubmission
+	query: Query!
+}
+
+type Mutation {
+	"Add member to group"
+	addMemberToGroup(input: AddMemberToGroupInput!): AddMemberToGroupPayload!
+	addNewComment(input: AddNewCommentInput!): AddNewCommentPayload!
+	createContact(input: CreateContactInput!): CreateContactPayload!
+	createContactGroup(input: CreateContactGroupInput!): CreateContactGroupPayload!
+	createFormSubmission(input: CreateFormSubmissionInput!): CreateFormSubmissionPayload!
+	"Create new group"
+	createGroup(input: CreateGroupInput!): CreateGroupPayload!
+	createNewFormStatus(input: CreateNewFormStatusInput!): CreateNewFormStatusPayload!
+	createNotificationChannel(input: CreateNotificationChannelInput!): CreateNotificationChannelPayload!
+	createNotificationTemplate(input: CreateNotificationTemplateInput!): CreateNotificationTemplatePayload!
+	"Create organization"
+	createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload!
+	"Create organization user"
+	createUserAndAddToOrganization(input: CreateUserAndAddToOrganizationInput!): CreateUserAndAddToOrganizationPayload!
+	deleteNotificationChannel(input: DeleteNotificationChannelInput!): DeleteNotificationChannelPayload!
+	"Invite user to organization"
+	inviteUserToOrganization(input: InviteUserToOrganizationInput!): InviteUserToOrganizationPayload!
+	moveToTrash(input: MoveToTrashInput!): MoveToTrashPayload!
+	persistFormSubmission(input: PersistFormSubmissionInput!): PersistFormSubmissionPayload!
+	previewJsonObject(input: PreviewJsonObjectInput!): PreviewJsonObjectPayload!
+	previewTemplate(input: PreviewTemplateInput!): PreviewTemplatePayload!
+	updateFormSubmissionStatus(input: UpdateFormSubmissionStatusInput!): UpdateFormSubmissionStatusPayload!
+	updateNotificationChannel(input: UpdateNotificationChannelInput!): UpdateNotificationChannelPayload!
+	updateNotificationTemplate(input: UpdateNotificationTemplateInput!): UpdateNotificationTemplatePayload!
+}
+
+type NotFoundError implements IUserErrors {
+	code: String!
+	message: String!
+}
+
+type NotificationChannel implements Node {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	name: String!
+	notificationTemplates: [NotificationTemplate!]!
+	order: Short
+	organizationId: UUID!
+	unsubscribeLists: [UnsubscribeList!]!
+	updatedAt: DateTime
+}
+
+"A connection to a list of items."
+type NotificationChannelsConnection {
+	"A list of edges."
+	edges: [NotificationChannelsEdge!]
+	"A flattened list of the nodes."
+	nodes: [NotificationChannel!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type NotificationChannelsEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: NotificationChannel!
+}
+
+type NotificationTemplate implements Node {
+	bodyHtml: String!
+	bodyText: String!
+	clickAction: String
+	createdAt: DateTime!
+	description: String
+	id: ID!
+	idNotificationChannel: Long!
+	key: String!
+	name: String!
+	notificationChannel: NotificationChannel!
+	notificationTemplateContents: [NotificationTemplateContent!]!
+	organizationId: UUID!
+	pushNotificationTemplate: String!
+	shortText: String!
+	updatedAt: DateTime
+	variableSchema: String!
+}
+
+type NotificationTemplateContent {
+	defaultVariable: String!
+	id: Long!
+	idLocale: String!
+	idLocaleNavigation: Locale!
+	idNotificationTemplate: Long!
+	idNotificationTemplateNavigation: NotificationTemplate!
+	notificationTemplate: String
+	organizationId: UUID!
+}
+
+"A connection to a list of items."
+type NotificationTemplatesConnection {
+	"A list of edges."
+	edges: [NotificationTemplatesEdge!]
+	"A flattened list of the nodes."
+	nodes: [NotificationTemplate!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type NotificationTemplatesEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: NotificationTemplate!
+}
+
+type Organization implements Node {
+	apartmentOrSuite: String
+	city: String!
+	config: String!
+	country: String!
+	createdAt: DateTime!
+	description: String
+	groups: [Group!]!
+	id: ID!
+	idOrganizationTemplate: Long!
+	idOrganizationTemplateNavigation: OrganizationTemplate!
+	name: String!
+	organizationId: UUID!
+	organizationInvitations: [OrganizationInvitation!]
+	organizationMembers: [OrganizationMember!]!
+	phoneNumber: Long!
+	phoneNumberCountry: Long!
+	preferredLanguage: String!
+	streetAddress: String!
+	technicalContact: String!
+	zipOrPostalCode: String!
+}
+
+type OrganizationInvitation implements Node {
+	createdAt: DateTime!
+	email: String!
+	expiredAt: DateTime
+	id: ID!
+	idInvitedBy: UUID!
+	idOrganization: UUID!
+	idOrganizationNavigation: Organization!
+	idUser: UUID!
+	message: String!
+	role: String!
+}
+
+"A connection to a list of items."
+type OrganizationInvitationsConnection {
+	"A list of edges."
+	edges: [OrganizationInvitationsEdge!]
+	"A flattened list of the nodes."
+	nodes: [OrganizationInvitation!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type OrganizationInvitationsEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: OrganizationInvitation!
+}
+
+type OrganizationMember implements Node {
+	createdAt: DateTime!
+	email: String!
+	id: ID!
+	idOrganization: UUID!
+	idOrganizationNavigation: Organization!
+	identity: User
+	userId: UUID!
+}
+
+"A connection to a list of items."
+type OrganizationMembersConnection {
+	"A list of edges."
+	edges: [OrganizationMembersEdge!]
+	"A flattened list of the nodes."
+	nodes: [OrganizationMember!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type OrganizationMembersEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: OrganizationMember!
+}
+
+type OrganizationTemplate implements Node {
+	description: String!
+	icon: String!
+	id: ID!
+	organizations: [Organization!]!
+	schema: String!
+	title: String!
+}
+
+"A connection to a list of items."
+type OrganizationTemplatesConnection {
+	"A list of edges."
+	edges: [OrganizationTemplatesEdge!]
+	"A flattened list of the nodes."
+	nodes: [OrganizationTemplate!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type OrganizationTemplatesEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: OrganizationTemplate!
+}
+
+"A connection to a list of items."
+type OrganizationsForUserConnection {
+	"A list of edges."
+	edges: [OrganizationsForUserEdge!]
+	"A flattened list of the nodes."
+	nodes: [Organization!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type OrganizationsForUserEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: Organization!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+	"When paginating forwards, the cursor to continue."
+	endCursor: String
+	"Indicates whether more edges exist following the set defined by the clients arguments."
+	hasNextPage: Boolean!
+	"Indicates whether more edges exist prior the set defined by the clients arguments."
+	hasPreviousPage: Boolean!
+	"When paginating backwards, the cursor to continue."
+	startCursor: String
+}
+
+type PersistFormSubmissionPayload {
+	formSubmission: FormSubmission
+	query: Query!
+}
+
+type Preview {
+	content: String!
+}
+
+type PreviewJsonObjectPayload {
+	preview: Preview
+	query: Query!
+}
+
+type PreviewTemplatePayload {
+	preview: Preview
+	query: Query!
+}
+
+type Query {
+	commentsForFormSubmission(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		formSubmissionId: ID!,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [FormCommentSortInput!],
+		where: FormCommentFilterInput
+	): CommentsForFormSubmissionConnection
+	contactById(id: ID!): Contact
+	"Get all contact groups"
+	contactGroups(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [ContactGroupSortInput!],
+		where: ContactGroupFilterInput
+	): ContactGroupsConnection
+	"Get all contacts"
+	contacts(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [ContactSortInput!],
+		where: ContactFilterInput
+	): ContactsConnection
+	dataSources: [DataSource!]!
+	"Get all forms channels"
+	form(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [FormSortInput!],
+		where: FormFilterInput
+	): FormConnection
+	formById(formId: ID!): Form
+	formKpis: [KpiFormInformation!]!
+	formStatus(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [FormStatusSortInput!],
+		where: FormStatusFilterInput
+	): FormStatusConnection
+	"Get all form submissions"
+	formSubmission(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		formId: ID!,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [FormSubmissionSortInput!],
+		where: FormSubmissionFilterInput
+	): FormSubmissionConnection
+	"Get all form submission by id"
+	formSubmissionById(formSubmissionId: ID!): FormSubmission
+	"Get group by id"
+	groupById(id: ID!): Group
+	"Group members by group id"
+	groupMembersByGroupId(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		id: ID!,
+		"Returns the last _n_ elements from the list."
+		last: Int
+	): GroupMembersByGroupIdConnection
+	"Get groups from the organization"
+	groups(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [GroupSortInput!],
+		organizationId: ID!,
+		where: GroupFilterInput
+	): GroupsConnection
+	"Get groups from the organization"
+	groupsTemplate(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [GroupTemplateSortInput!],
+		where: GroupTemplateFilterInput
+	): GroupsTemplateConnection
+	"Get all locales"
+	locales(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [LocaleSortInput!],
+		where: LocaleFilterInput
+	): LocalesConnection
+	"Fetches an object given its ID."
+	node(
+		"ID of the object."
+		id: ID!
+	): Node
+	"Lookup nodes by a list of IDs."
+	nodes(
+		"The list of node IDs."
+		ids: [ID!]!
+	): [Node]!
+	"Get all notification channels"
+	notificationChannels(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [NotificationChannelSortInput!],
+		where: NotificationChannelFilterInput
+	): NotificationChannelsConnection
+	notificationTemplateByKey(key: String!): NotificationTemplate
+	"Get all notification templates"
+	notificationTemplates(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [NotificationTemplateSortInput!],
+		where: NotificationTemplateFilterInput
+	): NotificationTemplatesConnection
+	"Get organization invitation"
+	organizationInvitations(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [OrganizationInvitationSortInput!],
+		organizationId: ID!
+	): OrganizationInvitationsConnection
+	"Get organization member"
+	organizationMembers(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [OrganizationMemberSortInput!],
+		organizationId: ID!
+	): OrganizationMembersConnection
+	"Get organization templates"
+	organizationTemplates(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [OrganizationTemplateSortInput!],
+		where: OrganizationTemplateFilterInput
+	): OrganizationTemplatesConnection
+	organizations: [String!]
+	"Get all organization for user"
+	organizationsForUser(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [OrganizationSortInput!]
+	): OrganizationsForUserConnection
+	revisionsForFormSubmission(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		formSubmissionId: ID!,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [FormSubmissionRevisionSortInput!],
+		where: FormSubmissionRevisionFilterInput
+	): RevisionsForFormSubmissionConnection
+	"Search users by email in organization"
+	searchUsersByEmail(
+		"Returns the elements in the list that come after the specified cursor."
+		after: String,
+		"Returns the elements in the list that come before the specified cursor."
+		before: String,
+		email: String!,
+		"Returns the first _n_ elements from the list."
+		first: Int,
+		"Returns the last _n_ elements from the list."
+		last: Int,
+		order: [OrganizationMemberSortInput!],
+		organizationId: ID!
+	): SearchUsersByEmailConnection
+}
+
+"A connection to a list of items."
+type RevisionsForFormSubmissionConnection {
+	"A list of edges."
+	edges: [RevisionsForFormSubmissionEdge!]
+	"A flattened list of the nodes."
+	nodes: [FormSubmissionRevision!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type RevisionsForFormSubmissionEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: FormSubmissionRevision!
+}
+
+"A connection to a list of items."
+type SearchUsersByEmailConnection {
+	"A list of edges."
+	edges: [SearchUsersByEmailEdge!]
+	"A flattened list of the nodes."
+	nodes: [OrganizationMember!]
+	"Information to aid in pagination."
+	pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type SearchUsersByEmailEdge {
+	"A cursor for use in pagination."
+	cursor: String!
+	"The item at the end of the edge."
+	node: OrganizationMember!
+}
+
+type UnauthorizedAccessError implements IUserErrors {
+	code: String!
+	message: String!
+}
+
+type UnsubscribeList {
+	createdAt: DateTime
+	id: Long!
+	idContact: Long!
+	idContactNavigation: Contact!
+	idNotificationChannel: Long!
+	idNotificationChannelNavigation: NotificationChannel!
+	organizationId: UUID!
+	updatedAt: DateTime
+}
+
+type UpdateFormSubmissionStatusPayload {
+	formStatus: FormStatus
+	query: Query!
+}
+
+type UpdateNotificationChannelPayload {
+	errors: [UpdateNotificationChannelError!]
+	notificationChannel: NotificationChannel
+	query: Query!
+}
+
+type UpdateNotificationTemplatePayload {
+	errors: [UpdateNotificationTemplateError!]
+	notificationTemplate: NotificationTemplate
+	query: Query!
+}
+
+type User implements Node {
+	active: Boolean!
+	email: String
+	firstName: String
+	id: ID!
+	lastName: String
+}
+
+enum OrganizationRole {
+	EDITOR
+	MEMBER
+	OWNER
+}
+
+enum SortEnumType {
+	ASC
+	DESC
+}
+
+enum TemplateFormat {
+	HTML
+	TEXT
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
+
+"The `Short` scalar type represents non-fractional signed whole 16-bit numeric values. Short can represent values between -(2^15) and 2^15 - 1."
+scalar Short
+
+scalar UUID
+
+input AddMemberToGroupInput {
+	groupId: ID!
+	memberId: ID!
+	organizationId: ID!
+	role: String!
+}
+
+input AddNewCommentInput {
+	comment: String!
+	submissionId: ID!
+}
+
+input BooleanOperationFilterInput {
+	eq: Boolean
+	neq: Boolean
+}
+
+input ContactEmailFilterInput {
+	and: [ContactEmailFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	email: StringOperationFilterInput
+	id: LongOperationFilterInput
+	idContact: LongOperationFilterInput
+	idContactNavigation: ContactFilterInput
+	or: [ContactEmailFilterInput!]
+	organizationId: UuidOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input ContactFilterInput {
+	and: [ContactFilterInput!]
+	attributes: StringOperationFilterInput
+	avatarUrl: StringOperationFilterInput
+	contactEmails: ListFilterInputTypeOfContactEmailFilterInput
+	contactGroup: ContactGroupFilterInput
+	contactGroupId: LongOperationFilterInput
+	contactPhoneNumbers: ListFilterInputTypeOfContactPhoneNumberFilterInput
+	contactPushTokens: ListFilterInputTypeOfContactPushTokenFilterInput
+	createdAt: DateTimeOperationFilterInput
+	externalUserId: StringOperationFilterInput
+	firstName: StringOperationFilterInput
+	id: LongOperationFilterInput
+	lastName: StringOperationFilterInput
+	locale: LocaleFilterInput
+	localeId: StringOperationFilterInput
+	or: [ContactFilterInput!]
+	organizationId: UuidOperationFilterInput
+	unsubscribeLists: ListFilterInputTypeOfUnsubscribeListFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input ContactGroupFilterInput {
+	and: [ContactGroupFilterInput!]
+	contacts: ListFilterInputTypeOfContactFilterInput
+	createdAt: DateTimeOperationFilterInput
+	description: StringOperationFilterInput
+	id: LongOperationFilterInput
+	name: StringOperationFilterInput
+	or: [ContactGroupFilterInput!]
+	organizationId: UuidOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input ContactGroupSortInput {
+	createdAt: SortEnumType
+	description: SortEnumType
+	id: SortEnumType
+	name: SortEnumType
+	organizationId: SortEnumType
+	updatedAt: SortEnumType
+}
+
+input ContactPhoneNumberFilterInput {
+	and: [ContactPhoneNumberFilterInput!]
+	countryCode: ShortOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	id: LongOperationFilterInput
+	idContact: LongOperationFilterInput
+	idContactNavigation: ContactFilterInput
+	number: LongOperationFilterInput
+	or: [ContactPhoneNumberFilterInput!]
+	organizationId: UuidOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input ContactPushTokenFilterInput {
+	and: [ContactPushTokenFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	id: LongOperationFilterInput
+	idContact: LongOperationFilterInput
+	idContactNavigation: ContactFilterInput
+	or: [ContactPushTokenFilterInput!]
+	organizationId: UuidOperationFilterInput
+	token: StringOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input ContactSortInput {
+	attributes: SortEnumType
+	avatarUrl: SortEnumType
+	contactGroup: ContactGroupSortInput
+	contactGroupId: SortEnumType
+	createdAt: SortEnumType
+	externalUserId: SortEnumType
+	firstName: SortEnumType
+	id: SortEnumType
+	lastName: SortEnumType
+	locale: LocaleSortInput
+	localeId: SortEnumType
+	organizationId: SortEnumType
+	updatedAt: SortEnumType
+}
+
+input CreateContactGroupInput {
+	description: String!
+	name: String!
+}
+
+input CreateContactInput {
+	avatar: String
+	countryCode: Short
+	email: String
+	externalUserId: String
+	firstName: String
+	lastName: String
+	phoneNumber: Long
+	userAttribute: String
+	userLanguage: ID!
+}
+
+input CreateFormSubmissionInput {
+	formId: ID!
+}
+
+input CreateGroupInput {
+	description: String!
+	extraData: String!
+	groupTemplateId: ID!
+	name: String!
+	organizationId: ID!
+	parentId: Long
+}
+
+input CreateNewFormStatusInput {
+	description: String!
+	title: String!
+}
+
+input CreateNotificationChannelInput {
+	description: String!
+	name: String!
+	order: Short
+}
+
+input CreateNotificationTemplateInput {
+	bodyHTML: String!
+	bodyText: String!
+	clickAction: String!
+	description: String!
+	key: String!
+	name: String!
+	notificationChannelId: ID!
+	pushNotificationTemplate: String!
+	shortText: String!
+	variableSchema: String!
+}
+
+input CreateOrganizationInput {
+	apartmentOrSuite: String
+	city: String!
+	config: String!
+	country: String!
+	description: String
+	name: String!
+	organizationTemplateId: ID!
+	phoneNumber: Long!
+	phoneNumberCountry: Int!
+	preferredLanguage: String!
+	streetAddress: String!
+	technicalContact: String!
+	zipOrPostalCode: String!
+}
+
+input CreateUserAndAddToOrganizationInput {
+	email: String!
+	firstName: String!
+	lastName: String!
+	organizationId: ID!
+	role: OrganizationRole!
+}
+
+input DateTimeOperationFilterInput {
+	eq: DateTime
+	gt: DateTime
+	gte: DateTime
+	in: [DateTime]
+	lt: DateTime
+	lte: DateTime
+	neq: DateTime
+	ngt: DateTime
+	ngte: DateTime
+	nin: [DateTime]
+	nlt: DateTime
+	nlte: DateTime
+}
+
+input DeleteNotificationChannelInput {
+	id: ID!
+}
+
+input FormAssignmentUserFilterInput {
+	and: [FormAssignmentUserFilterInput!]
+	assignedTo: UuidOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	id: LongOperationFilterInput
+	idFormSubmission: LongOperationFilterInput
+	idFormSubmissionNavigation: FormSubmissionFilterInput
+	or: [FormAssignmentUserFilterInput!]
+	organizationId: UuidOperationFilterInput
+}
+
+input FormCommentFilterInput {
+	and: [FormCommentFilterInput!]
+	content: StringOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	createdBy: UuidOperationFilterInput
+	id: LongOperationFilterInput
+	idFormSubmission: LongOperationFilterInput
+	idFormSubmissionNavigation: FormSubmissionFilterInput
+	message: StringOperationFilterInput
+	or: [FormCommentFilterInput!]
+	organizationId: UuidOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input FormCommentSortInput {
+	content: SortEnumType
+	createdAt: SortEnumType
+	createdBy: SortEnumType
+	id: SortEnumType
+	idFormSubmission: SortEnumType
+	idFormSubmissionNavigation: FormSubmissionSortInput
+	message: SortEnumType
+	organizationId: SortEnumType
+	updatedAt: SortEnumType
+}
+
+input FormConfigFilterInput {
+	and: [FormConfigFilterInput!]
+	id: LongOperationFilterInput
+	idNavigation: FormFilterInput
+	or: [FormConfigFilterInput!]
+}
+
+input FormConfigSortInput {
+	id: SortEnumType
+	idNavigation: FormSortInput
+}
+
+input FormFilterInput {
+	and: [FormFilterInput!]
+	auditEnabled: BooleanOperationFilterInput
+	config: StringOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	createdBy: UuidOperationFilterInput
+	dateFormat: StringOperationFilterInput
+	description: StringOperationFilterInput
+	displayField: StringOperationFilterInput
+	formConfig: FormConfigFilterInput
+	formSubmissions: ListFilterInputTypeOfFormSubmissionFilterInput
+	id: LongOperationFilterInput
+	language: StringOperationFilterInput
+	or: [FormFilterInput!]
+	organizationId: UuidOperationFilterInput
+	pinnedFields: ListStringOperationFilterInput
+	title: StringOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input FormSortInput {
+	auditEnabled: SortEnumType
+	config: SortEnumType
+	createdAt: SortEnumType
+	createdBy: SortEnumType
+	dateFormat: SortEnumType
+	description: SortEnumType
+	displayField: SortEnumType
+	formConfig: FormConfigSortInput
+	id: SortEnumType
+	language: SortEnumType
+	organizationId: SortEnumType
+	title: SortEnumType
+	updatedAt: SortEnumType
+}
+
+input FormStatusFilterInput {
+	and: [FormStatusFilterInput!]
+	description: StringOperationFilterInput
+	forms: ListFilterInputTypeOfFormSubmissionFilterInput
+	id: LongOperationFilterInput
+	or: [FormStatusFilterInput!]
+	organizationId: UuidOperationFilterInput
+	title: StringOperationFilterInput
+}
+
+input FormStatusSortInput {
+	description: SortEnumType
+	id: SortEnumType
+	organizationId: SortEnumType
+	title: SortEnumType
+}
+
+input FormSubmissionFilterInput {
+	and: [FormSubmissionFilterInput!]
+	comments: ListFilterInputTypeOfFormCommentFilterInput
+	createdAt: DateTimeOperationFilterInput
+	data: StringOperationFilterInput
+	deletedAt: DateTimeOperationFilterInput
+	form: FormFilterInput
+	id: LongOperationFilterInput
+	or: [FormSubmissionFilterInput!]
+	organizationId: UuidOperationFilterInput
+	priority: StringOperationFilterInput
+	revisions: ListFilterInputTypeOfFormSubmissionRevisionFilterInput
+	status: FormStatusFilterInput
+	statusId: IdOperationFilterInput
+	tags: ListFilterInputTypeOfFormSubmissionTagFilterInput
+	title: StringOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+	userFormAssignments: ListFilterInputTypeOfFormAssignmentUserFilterInput
+}
+
+input FormSubmissionRevisionFilterInput {
+	and: [FormSubmissionRevisionFilterInput!]
+	authorId: UuidOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	id: LongOperationFilterInput
+	idFormSubmission: LongOperationFilterInput
+	idFormSubmissionNavigation: FormSubmissionFilterInput
+	or: [FormSubmissionRevisionFilterInput!]
+	organizationId: UuidOperationFilterInput
+	revision: StringOperationFilterInput
+	userIpAddress: ValueTupleOfIPAddressAndInt32FilterInput
+}
+
+input FormSubmissionRevisionSortInput {
+	authorId: SortEnumType
+	createdAt: SortEnumType
+	id: SortEnumType
+	idFormSubmission: SortEnumType
+	idFormSubmissionNavigation: FormSubmissionSortInput
+	organizationId: SortEnumType
+	revision: SortEnumType
+	userIpAddress: SortEnumType
+}
+
+input FormSubmissionSortInput {
+	createdAt: SortEnumType
+	data: SortEnumType
+	deletedAt: SortEnumType
+	form: FormSortInput
+	id: SortEnumType
+	organizationId: SortEnumType
+	priority: SortEnumType
+	status: FormStatusSortInput
+	statusId: SortEnumType
+	title: SortEnumType
+	updatedAt: SortEnumType
+}
+
+input FormSubmissionTagFilterInput {
+	and: [FormSubmissionTagFilterInput!]
+	id: LongOperationFilterInput
+	idFormSubmission: LongOperationFilterInput
+	idFormSubmissionNavigation: FormSubmissionFilterInput
+	or: [FormSubmissionTagFilterInput!]
+	organizationId: UuidOperationFilterInput
+	tag: StringOperationFilterInput
+}
+
+input GroupFilterInput {
+	and: [GroupFilterInput!]
+	data: StringOperationFilterInput
+	description: StringOperationFilterInput
+	groupMembers: ListFilterInputTypeOfGroupMemberFilterInput
+	groupTemplate: GroupTemplateFilterInput
+	groupTemplateId: LongOperationFilterInput
+	groups: ListFilterInputTypeOfGroupFilterInput
+	id: LongOperationFilterInput
+	idOrganization: UuidOperationFilterInput
+	name: StringOperationFilterInput
+	or: [GroupFilterInput!]
+	parentGroup: GroupFilterInput
+	parentGroupId: IdOperationFilterInput
+}
+
+input GroupMemberFilterInput {
+	and: [GroupMemberFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	group: GroupFilterInput
+	id: LongOperationFilterInput
+	idUser: IdOperationFilterInput
+	or: [GroupMemberFilterInput!]
+	role: StringOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input GroupSortInput {
+	data: SortEnumType
+	description: SortEnumType
+	groupTemplate: GroupTemplateSortInput
+	groupTemplateId: SortEnumType
+	id: SortEnumType
+	idOrganization: SortEnumType
+	name: SortEnumType
+	parentGroup: GroupSortInput
+	parentGroupId: SortEnumType
+}
+
+input GroupTemplateFilterInput {
+	and: [GroupTemplateFilterInput!]
+	config: StringOperationFilterInput
+	description: StringOperationFilterInput
+	groups: ListFilterInputTypeOfGroupFilterInput
+	icon: StringOperationFilterInput
+	id: LongOperationFilterInput
+	name: StringOperationFilterInput
+	or: [GroupTemplateFilterInput!]
+}
+
+input GroupTemplateSortInput {
+	config: SortEnumType
+	description: SortEnumType
+	icon: SortEnumType
+	id: SortEnumType
+	name: SortEnumType
+}
+
+input IdOperationFilterInput {
+	eq: ID
+	in: [ID]
+	neq: ID
+	nin: [ID]
+}
+
+input InviteUserToOrganizationInput {
+	email: String!
+	message: String!
+	organizationId: ID!
+	role: OrganizationRole!
+}
+
+input ListFilterInputTypeOfContactEmailFilterInput {
+	all: ContactEmailFilterInput
+	any: Boolean
+	none: ContactEmailFilterInput
+	some: ContactEmailFilterInput
+}
+
+input ListFilterInputTypeOfContactFilterInput {
+	all: ContactFilterInput
+	any: Boolean
+	none: ContactFilterInput
+	some: ContactFilterInput
+}
+
+input ListFilterInputTypeOfContactPhoneNumberFilterInput {
+	all: ContactPhoneNumberFilterInput
+	any: Boolean
+	none: ContactPhoneNumberFilterInput
+	some: ContactPhoneNumberFilterInput
+}
+
+input ListFilterInputTypeOfContactPushTokenFilterInput {
+	all: ContactPushTokenFilterInput
+	any: Boolean
+	none: ContactPushTokenFilterInput
+	some: ContactPushTokenFilterInput
+}
+
+input ListFilterInputTypeOfFormAssignmentUserFilterInput {
+	all: FormAssignmentUserFilterInput
+	any: Boolean
+	none: FormAssignmentUserFilterInput
+	some: FormAssignmentUserFilterInput
+}
+
+input ListFilterInputTypeOfFormCommentFilterInput {
+	all: FormCommentFilterInput
+	any: Boolean
+	none: FormCommentFilterInput
+	some: FormCommentFilterInput
+}
+
+input ListFilterInputTypeOfFormSubmissionFilterInput {
+	all: FormSubmissionFilterInput
+	any: Boolean
+	none: FormSubmissionFilterInput
+	some: FormSubmissionFilterInput
+}
+
+input ListFilterInputTypeOfFormSubmissionRevisionFilterInput {
+	all: FormSubmissionRevisionFilterInput
+	any: Boolean
+	none: FormSubmissionRevisionFilterInput
+	some: FormSubmissionRevisionFilterInput
+}
+
+input ListFilterInputTypeOfFormSubmissionTagFilterInput {
+	all: FormSubmissionTagFilterInput
+	any: Boolean
+	none: FormSubmissionTagFilterInput
+	some: FormSubmissionTagFilterInput
+}
+
+input ListFilterInputTypeOfGroupFilterInput {
+	all: GroupFilterInput
+	any: Boolean
+	none: GroupFilterInput
+	some: GroupFilterInput
+}
+
+input ListFilterInputTypeOfGroupMemberFilterInput {
+	all: GroupMemberFilterInput
+	any: Boolean
+	none: GroupMemberFilterInput
+	some: GroupMemberFilterInput
+}
+
+input ListFilterInputTypeOfNotificationTemplateContentFilterInput {
+	all: NotificationTemplateContentFilterInput
+	any: Boolean
+	none: NotificationTemplateContentFilterInput
+	some: NotificationTemplateContentFilterInput
+}
+
+input ListFilterInputTypeOfNotificationTemplateFilterInput {
+	all: NotificationTemplateFilterInput
+	any: Boolean
+	none: NotificationTemplateFilterInput
+	some: NotificationTemplateFilterInput
+}
+
+input ListFilterInputTypeOfOrganizationFilterInput {
+	all: OrganizationFilterInput
+	any: Boolean
+	none: OrganizationFilterInput
+	some: OrganizationFilterInput
+}
+
+input ListFilterInputTypeOfOrganizationInvitationFilterInput {
+	all: OrganizationInvitationFilterInput
+	any: Boolean
+	none: OrganizationInvitationFilterInput
+	some: OrganizationInvitationFilterInput
+}
+
+input ListFilterInputTypeOfOrganizationMemberFilterInput {
+	all: OrganizationMemberFilterInput
+	any: Boolean
+	none: OrganizationMemberFilterInput
+	some: OrganizationMemberFilterInput
+}
+
+input ListFilterInputTypeOfUnsubscribeListFilterInput {
+	all: UnsubscribeListFilterInput
+	any: Boolean
+	none: UnsubscribeListFilterInput
+	some: UnsubscribeListFilterInput
+}
+
+input ListStringOperationFilterInput {
+	all: StringOperationFilterInput
+	any: Boolean
+	none: StringOperationFilterInput
+	some: StringOperationFilterInput
+}
+
+input LocaleFilterInput {
+	and: [LocaleFilterInput!]
+	contacts: ListFilterInputTypeOfContactFilterInput
+	id: StringOperationFilterInput
+	name: StringOperationFilterInput
+	nameNative: StringOperationFilterInput
+	notificationTemplateContents: ListFilterInputTypeOfNotificationTemplateContentFilterInput
+	or: [LocaleFilterInput!]
+}
+
+input LocaleSortInput {
+	id: SortEnumType
+	name: SortEnumType
+	nameNative: SortEnumType
+}
+
+input LongOperationFilterInput {
+	eq: Long
+	gt: Long
+	gte: Long
+	in: [Long]
+	lt: Long
+	lte: Long
+	neq: Long
+	ngt: Long
+	ngte: Long
+	nin: [Long]
+	nlt: Long
+	nlte: Long
+}
+
+input MoveToTrashInput {
+	submissionId: ID!
+}
+
+input NotificationChannelFilterInput {
+	and: [NotificationChannelFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	description: StringOperationFilterInput
+	id: LongOperationFilterInput
+	name: StringOperationFilterInput
+	notificationTemplates: ListFilterInputTypeOfNotificationTemplateFilterInput
+	or: [NotificationChannelFilterInput!]
+	order: ShortOperationFilterInput
+	organizationId: UuidOperationFilterInput
+	unsubscribeLists: ListFilterInputTypeOfUnsubscribeListFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input NotificationChannelSortInput {
+	createdAt: SortEnumType
+	description: SortEnumType
+	id: SortEnumType
+	name: SortEnumType
+	order: SortEnumType
+	organizationId: SortEnumType
+	updatedAt: SortEnumType
+}
+
+input NotificationTemplateContentFilterInput {
+	and: [NotificationTemplateContentFilterInput!]
+	defaultVariable: StringOperationFilterInput
+	id: LongOperationFilterInput
+	idLocale: StringOperationFilterInput
+	idLocaleNavigation: LocaleFilterInput
+	idNotificationTemplate: LongOperationFilterInput
+	idNotificationTemplateNavigation: NotificationTemplateFilterInput
+	notificationTemplate: StringOperationFilterInput
+	or: [NotificationTemplateContentFilterInput!]
+	organizationId: UuidOperationFilterInput
+}
+
+input NotificationTemplateFilterInput {
+	and: [NotificationTemplateFilterInput!]
+	bodyHtml: StringOperationFilterInput
+	bodyText: StringOperationFilterInput
+	clickAction: StringOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	description: StringOperationFilterInput
+	id: LongOperationFilterInput
+	idNotificationChannel: LongOperationFilterInput
+	key: StringOperationFilterInput
+	name: StringOperationFilterInput
+	notificationChannel: NotificationChannelFilterInput
+	notificationTemplateContents: ListFilterInputTypeOfNotificationTemplateContentFilterInput
+	or: [NotificationTemplateFilterInput!]
+	organizationId: UuidOperationFilterInput
+	pushNotificationTemplate: StringOperationFilterInput
+	shortText: StringOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+	variableSchema: StringOperationFilterInput
+}
+
+input NotificationTemplateSortInput {
+	bodyHtml: SortEnumType
+	bodyText: SortEnumType
+	clickAction: SortEnumType
+	createdAt: SortEnumType
+	description: SortEnumType
+	id: SortEnumType
+	idNotificationChannel: SortEnumType
+	key: SortEnumType
+	name: SortEnumType
+	notificationChannel: NotificationChannelSortInput
+	organizationId: SortEnumType
+	pushNotificationTemplate: SortEnumType
+	shortText: SortEnumType
+	updatedAt: SortEnumType
+	variableSchema: SortEnumType
+}
+
+input OrganizationFilterInput {
+	and: [OrganizationFilterInput!]
+	apartmentOrSuite: StringOperationFilterInput
+	city: StringOperationFilterInput
+	config: StringOperationFilterInput
+	country: StringOperationFilterInput
+	createdAt: DateTimeOperationFilterInput
+	description: StringOperationFilterInput
+	groups: ListFilterInputTypeOfGroupFilterInput
+	id: UuidOperationFilterInput
+	idOrganizationTemplate: LongOperationFilterInput
+	idOrganizationTemplateNavigation: OrganizationTemplateFilterInput
+	name: StringOperationFilterInput
+	or: [OrganizationFilterInput!]
+	organizationId: UuidOperationFilterInput
+	organizationInvitations: ListFilterInputTypeOfOrganizationInvitationFilterInput
+	organizationMembers: ListFilterInputTypeOfOrganizationMemberFilterInput
+	phoneNumber: LongOperationFilterInput
+	phoneNumberCountry: LongOperationFilterInput
+	preferredLanguage: StringOperationFilterInput
+	streetAddress: StringOperationFilterInput
+	technicalContact: StringOperationFilterInput
+	zipOrPostalCode: StringOperationFilterInput
+}
+
+input OrganizationInvitationFilterInput {
+	and: [OrganizationInvitationFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	email: StringOperationFilterInput
+	expiredAt: DateTimeOperationFilterInput
+	id: LongOperationFilterInput
+	idInvitedBy: UuidOperationFilterInput
+	idOrganization: UuidOperationFilterInput
+	idOrganizationNavigation: OrganizationFilterInput
+	idUser: UuidOperationFilterInput
+	message: StringOperationFilterInput
+	or: [OrganizationInvitationFilterInput!]
+	role: StringOperationFilterInput
+}
+
+input OrganizationInvitationSortInput {
+	createdAt: SortEnumType
+	email: SortEnumType
+	expiredAt: SortEnumType
+	id: SortEnumType
+	idInvitedBy: SortEnumType
+	idOrganization: SortEnumType
+	idOrganizationNavigation: OrganizationSortInput
+	idUser: SortEnumType
+	message: SortEnumType
+	role: SortEnumType
+}
+
+input OrganizationMemberFilterInput {
+	and: [OrganizationMemberFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	email: StringOperationFilterInput
+	id: LongOperationFilterInput
+	idOrganization: UuidOperationFilterInput
+	idOrganizationNavigation: OrganizationFilterInput
+	or: [OrganizationMemberFilterInput!]
+	userId: UuidOperationFilterInput
+}
+
+input OrganizationMemberSortInput {
+	createdAt: SortEnumType
+	email: SortEnumType
+	id: SortEnumType
+	idOrganization: SortEnumType
+	idOrganizationNavigation: OrganizationSortInput
+	userId: SortEnumType
+}
+
+input OrganizationSortInput {
+	apartmentOrSuite: SortEnumType
+	city: SortEnumType
+	config: SortEnumType
+	country: SortEnumType
+	createdAt: SortEnumType
+	description: SortEnumType
+	id: SortEnumType
+	idOrganizationTemplate: SortEnumType
+	idOrganizationTemplateNavigation: OrganizationTemplateSortInput
+	name: SortEnumType
+	organizationId: SortEnumType
+	phoneNumber: SortEnumType
+	phoneNumberCountry: SortEnumType
+	preferredLanguage: SortEnumType
+	streetAddress: SortEnumType
+	technicalContact: SortEnumType
+	zipOrPostalCode: SortEnumType
+}
+
+input OrganizationTemplateFilterInput {
+	and: [OrganizationTemplateFilterInput!]
+	description: StringOperationFilterInput
+	icon: StringOperationFilterInput
+	id: LongOperationFilterInput
+	or: [OrganizationTemplateFilterInput!]
+	organizations: ListFilterInputTypeOfOrganizationFilterInput
+	schema: StringOperationFilterInput
+	title: StringOperationFilterInput
+}
+
+input OrganizationTemplateSortInput {
+	description: SortEnumType
+	icon: SortEnumType
+	id: SortEnumType
+	schema: SortEnumType
+	title: SortEnumType
+}
+
+input PersistFormSubmissionInput {
+	data: String!
+	formSubmissionId: ID!
+}
+
+input PreviewJsonObjectInput {
+	content: String!
+}
+
+input PreviewTemplateInput {
+	content: String!
+	format: TemplateFormat!
+	variables: String!
+}
+
+input ShortOperationFilterInput {
+	eq: Short
+	gt: Short
+	gte: Short
+	in: [Short]
+	lt: Short
+	lte: Short
+	neq: Short
+	ngt: Short
+	ngte: Short
+	nin: [Short]
+	nlt: Short
+	nlte: Short
+}
+
+input StringOperationFilterInput {
+	and: [StringOperationFilterInput!]
+	contains: String
+	endsWith: String
+	eq: String
+	in: [String]
+	ncontains: String
+	nendsWith: String
+	neq: String
+	nin: [String]
+	nstartsWith: String
+	or: [StringOperationFilterInput!]
+	startsWith: String
+}
+
+input UnsubscribeListFilterInput {
+	and: [UnsubscribeListFilterInput!]
+	createdAt: DateTimeOperationFilterInput
+	id: LongOperationFilterInput
+	idContact: LongOperationFilterInput
+	idContactNavigation: ContactFilterInput
+	idNotificationChannel: LongOperationFilterInput
+	idNotificationChannelNavigation: NotificationChannelFilterInput
+	or: [UnsubscribeListFilterInput!]
+	organizationId: UuidOperationFilterInput
+	updatedAt: DateTimeOperationFilterInput
+}
+
+input UpdateFormSubmissionStatusInput {
+	statusId: ID!
+	submissionId: ID!
+}
+
+input UpdateNotificationChannelInput {
+	description: String!
+	id: ID!
+	name: String!
+	order: Short
+}
+
+input UpdateNotificationTemplateInput {
+	bodyHTML: String!
+	bodyText: String!
+	clickAction: String!
+	description: String!
+	key: String!
+	name: String!
+	notificationChannelId: ID!
+	pushNotificationTemplate: String!
+	shortText: String!
+	variableSchema: String!
+}
+
+input UuidOperationFilterInput {
+	eq: UUID
+	gt: UUID
+	gte: UUID
+	in: [UUID]
+	lt: UUID
+	lte: UUID
+	neq: UUID
+	ngt: UUID
+	ngte: UUID
+	nin: [UUID]
+	nlt: UUID
+	nlte: UUID
+}
+
+input ValueTupleOfIPAddressAndInt32FilterInput {
+	and: [ValueTupleOfIPAddressAndInt32FilterInput!]
+	or: [ValueTupleOfIPAddressAndInt32FilterInput!]
+}

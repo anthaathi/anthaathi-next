@@ -1,0 +1,375 @@
+{
+	"type_definitions": [
+		{
+			"type": "form",
+			"relations": {
+				"editor": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "owner"
+								}
+							}
+						]
+					}
+				},
+				"owner": {
+					"this": {}
+				},
+				"viewer": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "editor"
+								}
+							}
+						]
+					}
+				}
+			},
+			"metadata": {
+				"relations": {
+					"editor": {
+						"directly_related_user_types": [
+							{
+								"type": "group",
+								"relation": "member"
+							},
+							{
+								"type": "user"
+							}
+						]
+					},
+					"owner": {
+						"directly_related_user_types": [
+							{
+								"type": "group",
+								"relation": "member"
+							},
+							{
+								"type": "user"
+							}
+						]
+					},
+					"viewer": {
+						"directly_related_user_types": [
+							{
+								"type": "organization",
+								"relation": "member"
+							},
+							{
+								"type": "user"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"type": "group",
+			"relations": {
+				"editor": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "owner"
+								}
+							},
+							{
+								"tupleToUserset": {
+									"tupleset": {
+										"object": "",
+										"relation": "parent"
+									},
+									"computedUserset": {
+										"object": "",
+										"relation": "editor"
+									}
+								}
+							}
+						]
+					}
+				},
+				"member": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"tupleToUserset": {
+									"tupleset": {
+										"object": "",
+										"relation": "parent"
+									},
+									"computedUserset": {
+										"object": "",
+										"relation": "member"
+									}
+								}
+							}
+						]
+					}
+				},
+				"owner": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"tupleToUserset": {
+									"tupleset": {
+										"object": "",
+										"relation": "parent"
+									},
+									"computedUserset": {
+										"object": "",
+										"relation": "owner"
+									}
+								}
+							}
+						]
+					}
+				},
+				"parent": {
+					"this": {}
+				},
+				"viewer": {
+					"union": {
+						"child": [
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "member"
+								}
+							},
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "editor"
+								}
+							}
+						]
+					}
+				}
+			},
+			"metadata": {
+				"relations": {
+					"editor": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							},
+							{
+								"type": "organization",
+								"relation": "editor"
+							}
+						]
+					},
+					"member": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							}
+						]
+					},
+					"owner": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							},
+							{
+								"type": "organization",
+								"relation": "owner"
+							}
+						]
+					},
+					"parent": {
+						"directly_related_user_types": [
+							{
+								"type": "group"
+							}
+						]
+					},
+					"viewer": {
+						"directly_related_user_types": []
+					}
+				}
+			}
+		},
+		{
+			"type": "organization",
+			"relations": {
+				"editor": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "owner"
+								}
+							}
+						]
+					}
+				},
+				"member": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"computedUserset": {
+									"object": "",
+									"relation": "editor"
+								}
+							}
+						]
+					}
+				},
+				"owner": {
+					"this": {}
+				}
+			},
+			"metadata": {
+				"relations": {
+					"editor": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							}
+						]
+					},
+					"member": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							}
+						]
+					},
+					"owner": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"type": "submission",
+			"relations": {
+				"editor": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"tupleToUserset": {
+									"tupleset": {
+										"object": "",
+										"relation": "parent"
+									},
+									"computedUserset": {
+										"object": "",
+										"relation": "editor"
+									}
+								}
+							}
+						]
+					}
+				},
+				"owner": {
+					"union": {
+						"child": [
+							{
+								"this": {}
+							},
+							{
+								"tupleToUserset": {
+									"tupleset": {
+										"object": "",
+										"relation": "parent"
+									},
+									"computedUserset": {
+										"object": "",
+										"relation": "owner"
+									}
+								}
+							}
+						]
+					}
+				},
+				"parent": {
+					"this": {}
+				},
+				"viewer": {
+					"this": {}
+				}
+			},
+			"metadata": {
+				"relations": {
+					"editor": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							}
+						]
+					},
+					"owner": {
+						"directly_related_user_types": [
+							{
+								"type": "user"
+							}
+						]
+					},
+					"parent": {
+						"directly_related_user_types": [
+							{
+								"type": "form"
+							}
+						]
+					},
+					"viewer": {
+						"directly_related_user_types": [
+							{
+								"type": "organization",
+								"relation": "member"
+							},
+							{
+								"type": "user"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"type": "user",
+			"relations": {},
+			"metadata": null
+		}
+	],
+	"schema_version": "1.1"
+}

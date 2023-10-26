@@ -1,0 +1,233 @@
+{
+  "00LcfG": {
+    "defaultMessage": "Load more"
+  },
+  "2cVj2C": {
+    "defaultMessage": "Open tasks"
+  },
+  "2gnKy+": {
+    "defaultMessage": "Zip code"
+  },
+  "3/02O/": {
+    "defaultMessage": "Customer type"
+  },
+  "4Zo524": {
+    "defaultMessage": "Assign to me"
+  },
+  "7UtfSB": {
+    "defaultMessage": "This organization does not exists or you don't have access to the organization.{br}Your UserID is {value}"
+  },
+  "8lCjAM": {
+    "defaultMessage": "Priority"
+  },
+  "8x3hns": {
+    "defaultMessage": "Pending tasks"
+  },
+  "9a9+ww": {
+    "defaultMessage": "Title"
+  },
+  "9uOFF3": {
+    "defaultMessage": "Overview"
+  },
+  "AEFBZs": {
+    "defaultMessage": "Change priority"
+  },
+  "BaIwdV": {
+    "defaultMessage": "Street"
+  },
+  "EBn5Wr": {
+    "defaultMessage": "Customer group"
+  },
+  "EhhNtp": {
+    "defaultMessage": "Customer addresses"
+  },
+  "EzWg3y": {
+    "defaultMessage": "Phone Number:"
+  },
+  "FU51/Z": {
+    "defaultMessage": "customer"
+  },
+  "FgydNe": {
+    "defaultMessage": "View"
+  },
+  "GgKvdU": {
+    "defaultMessage": "Task Report"
+  },
+  "HAlOn1": {
+    "defaultMessage": "Name"
+  },
+  "INlWvJ": {
+    "defaultMessage": "OR"
+  },
+  "ITdmlJ": {
+    "defaultMessage": "Contact information"
+  },
+  "J9vKoX": {
+    "defaultMessage": "My tasks"
+  },
+  "LsCb6g": {
+    "defaultMessage": "Add new customer"
+  },
+  "M/zZVx": {
+    "defaultMessage": "Add filter"
+  },
+  "O95R3Z": {
+    "defaultMessage": "Phone"
+  },
+  "Px6I1N": {
+    "defaultMessage": "Total tasks"
+  },
+  "Q8Qw5B": {
+    "defaultMessage": "Description"
+  },
+  "TE4fIS": {
+    "defaultMessage": "City"
+  },
+  "TkYZBT": {
+    "defaultMessage": "Customers"
+  },
+  "V3nIzA": {
+    "defaultMessage": "All groups"
+  },
+  "X0OHy2": {
+    "defaultMessage": "Select user"
+  },
+  "YgU7zh": {
+    "defaultMessage": "Completed tasks"
+  },
+  "YvrusP": {
+    "defaultMessage": "Type to search user"
+  },
+  "aYIUar": {
+    "defaultMessage": "Thank you!"
+  },
+  "auL3Aj": {
+    "defaultMessage": "Anthaathi Tasks"
+  },
+  "cSbLzO": {
+    "defaultMessage": "Could not found customer?"
+  },
+  "coh2h6": {
+    "defaultMessage": "Thanks for your feedback!"
+  },
+  "ejEGdx": {
+    "defaultMessage": "Home"
+  },
+  "etRCQR": {
+    "defaultMessage": "Add Reference"
+  },
+  "gL86bv": {
+    "defaultMessage": "Group name"
+  },
+  "ha+gKC": {
+    "defaultMessage": "Search customer"
+  },
+  "hkENym": {
+    "defaultMessage": "Customer"
+  },
+  "ho/vnh": {
+    "defaultMessage": "Select customer"
+  },
+  "i4V6L9": {
+    "defaultMessage": "Create Customer"
+  },
+  "iZDRGO": {
+    "defaultMessage": "Assigned"
+  },
+  "j19vFy": {
+    "defaultMessage": "Customer groups"
+  },
+  "jdJhOL": {
+    "defaultMessage": "Phone number"
+  },
+  "jtxQPo": {
+    "defaultMessage": "New Task"
+  },
+  "jvo0vs": {
+    "defaultMessage": "Save"
+  },
+  "ku+mDU": {
+    "defaultMessage": "State"
+  },
+  "l+Ky0x": {
+    "defaultMessage": "Select your organization"
+  },
+  "l3AfOI": {
+    "defaultMessage": "Due date"
+  },
+  "ljxw1z": {
+    "defaultMessage": "All customers"
+  },
+  "lvS98E": {
+    "defaultMessage": "Select task type"
+  },
+  "ninItd": {
+    "defaultMessage": "Create customer"
+  },
+  "nqLyH7": {
+    "defaultMessage": "All Customers"
+  },
+  "pONqz8": {
+    "defaultMessage": "First name"
+  },
+  "qR4rZh": {
+    "defaultMessage": "Company:"
+  },
+  "qlcuNQ": {
+    "defaultMessage": "ID"
+  },
+  "reFEEC": {
+    "defaultMessage": "Reporting"
+  },
+  "sKUQOI": {
+    "defaultMessage": "Link is expired or does not exists. Please check the link or contact the administration."
+  },
+  "sQGGdc": {
+    "defaultMessage": "Task updated"
+  },
+  "sy+pv5": {
+    "defaultMessage": "Email"
+  },
+  "tTgHFY": {
+    "defaultMessage": "Task not found"
+  },
+  "tjEelq": {
+    "defaultMessage": "Closed tasks"
+  },
+  "txUL0F": {
+    "defaultMessage": "Last name"
+  },
+  "tzMNF3": {
+    "defaultMessage": "Status"
+  },
+  "uRYRJh": {
+    "defaultMessage": "Edit {type}"
+  },
+  "uS4sop": {
+    "defaultMessage": "Type:"
+  },
+  "uTnplY": {
+    "defaultMessage": "Description:"
+  },
+  "vONi+O": {
+    "defaultMessage": "Country"
+  },
+  "wEQDC6": {
+    "defaultMessage": "Edit"
+  },
+  "x+hOgF": {
+    "defaultMessage": "Landmark"
+  },
+  "xBrtnx": {
+    "defaultMessage": "Addresses"
+  },
+  "xpTPb3": {
+    "defaultMessage": "Email:"
+  },
+  "yhU1et": {
+    "defaultMessage": "Tasks"
+  },
+  "zZ+oxG": {
+    "defaultMessage": "Select customer who referred this task"
+  }
+}

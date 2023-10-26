@@ -1,0 +1,197 @@
+{
+  "name": "@anthaathi/graphql-gateway",
+  "version": "0.0.1",
+  "description": "GraphQL gateway",
+  "scripts": {
+    "dev": "wireit",
+    "watch:server": "wireit",
+    "dev:server": "node --require ./dist/instrumentation.js dist/server.js",
+    "format:prisma": "wireit",
+    "swc:compile": "wireit",
+    "prisma:generate": "wireit",
+    "seed": "wireit",
+    "db:migrate": "pnpify prisma migrate deploy",
+    "lint": "wireit",
+    "build": "wireit",
+    "start:prod": "node --require ./dist/instrumentation.js dist/server.js",
+    "tsc:check": "wireit",
+    "build:docker": "wireit",
+    "prisma:generate:prod": "pnpify prisma generate"
+  },
+  "wireit": {
+		"seed": {
+			"command": "ts-node src/seed.ts",
+			"files": [
+				"src/seed.ts"
+			],
+			"dependencies": [
+				"prisma:generate"
+			]
+		},
+    "build": {
+      "command": "swc --copy-files -s true ./src -d dist/",
+      "files": [
+        "src/**/*.{ts,tsx}"
+      ],
+      "dependencies": [
+        "tsc:check"
+      ]
+    },
+    "build:docker": {
+      "command": "docker buildx build --push --tag $TAG --platform linux/arm64,linux/amd64 --metadata-file docker-metadata .",
+      "files": [
+        "Dockerfile"
+      ],
+      "output": [
+        "docker-metadata"
+      ],
+      "env": {
+        "VITE_ORY_SDK_URL": {
+          "external": true
+        },
+        "TAG": {
+          "external": true
+        }
+      },
+      "dependencies": [
+        "build",
+        "pre:docker"
+      ]
+    },
+    "pre:docker": {
+      "command": "bash predocker.sh",
+      "dependencies": [],
+      "files": [
+        "predocker.sh",
+        "../../../../.yarnrc",
+        "../../../../yarn.lock",
+        "package.json"
+      ],
+      "output": [
+        "docker-build"
+      ],
+      "env": {
+        "VITE_ORY_SDK_URL": {
+          "external": true
+        }
+      }
+    },
+    "tsc:check": {
+      "command": "pnpify tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**/*.{ts,tsx}",
+        "tsconfig.json"
+      ],
+      "dependencies": [
+        "prisma:generate"
+      ],
+      "output": [
+        ".tsbuildinfo"
+      ]
+    },
+    "watch:server": {
+      "service": true,
+      "command": "nodemon --watch dist --watch prisma --exec yarn dev:server"
+    },
+    "dev": {
+      "service": true,
+      "command": "yarn prisma:generate && concurrently yarn:swc:compile yarn:watch:server"
+    },
+    "swc:compile": {
+      "service": true,
+      "command": "swc --copy-files -w true -s true ./src -d dist/"
+    },
+    "prisma:generate": {
+      "command": "pnpify prisma generate",
+      "files": [
+        "prisma/schema.prisma"
+      ],
+      "output": [
+        "src/generated"
+      ],
+      "env": {
+        "PRISMA_CLI_QUERY_ENGINE_TYPE": {
+          "external": true
+        }
+      }
+    },
+    "lint": {
+      "command": "eslint \"src\" --max-warnings 0 --color --cache --cache-location .eslintcache",
+      "files": [
+        "src/**/*.{ts,tsx}",
+        ".eslintignore",
+        ".eslintrc.cjs"
+      ],
+      "dependencies": [
+        "tsc:check"
+      ],
+      "output": []
+    },
+    "format:prettier": {
+      "command": "prettier --write \"src/**/*.{ts,tsx}\"",
+      "files": [
+        "src/**/*.{ts,tsx}",
+        ".prettierrc"
+      ],
+      "output": []
+    },
+    "format:prisma": {
+      "command": "prisma format && prisma-case-format --file ./prisma/schema.prisma --table-case pascal --field-case camel --map-table-case snake --map-field-case snake",
+      "files": [
+        "prisma/schema.prisma"
+      ],
+      "output": []
+    }
+  },
+  "dependencies": {
+    "@envelop/opentelemetry": "^5.0.3",
+    "@graphql-yoga/plugin-disable-introspection": "^1.0.5",
+    "@opensearch-project/opensearch": "^2.4.0",
+    "@opentelemetry/api": "^1.6.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.39.3",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.44.0",
+    "@opentelemetry/instrumentation": "^0.44.0",
+    "@opentelemetry/instrumentation-dns": "^0.32.3",
+    "@opentelemetry/instrumentation-graphql": "^0.35.2",
+    "@opentelemetry/instrumentation-http": "^0.44.0",
+    "@opentelemetry/resources": "^1.17.1",
+    "@opentelemetry/sdk-metrics": "^1.17.1",
+    "@opentelemetry/sdk-node": "^0.44.0",
+    "@opentelemetry/sdk-trace-base": "^1.17.1",
+    "@opentelemetry/sdk-trace-node": "^1.17.1",
+    "@opentelemetry/semantic-conventions": "^1.17.1",
+    "@ory/client": "^1.2.11",
+    "@pothos/core": "^3.38.0",
+    "@pothos/plugin-prisma": "^3.61.0",
+    "@pothos/plugin-relay": "^3.44.0",
+    "@pothos/plugin-scope-auth": "^3.20.0",
+    "@pothos/plugin-simple-objects": "^3.7.0",
+    "@prisma/client": "^5.4.2",
+    "@prisma/instrumentation": "^5.4.2",
+    "@yarnpkg/pnpify": "^4.0.0-rc.53",
+    "graphql": "^16.8.1",
+    "graphql-scalars": "^1.22.4",
+    "graphql-yoga": "^4.0.5",
+    "lodash": "^4.17.21",
+    "prisma": "^5.4.2"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.92",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/lodash": "^4.14.199",
+    "@types/node": "^20.8.4",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "chokidar": "^3.5.3",
+    "concurrently": "^8.2.1",
+    "eslint": "^8.51.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.3",
+    "prisma-case-format": "^1.7.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "wireit": "^0.14.0"
+  }
+}

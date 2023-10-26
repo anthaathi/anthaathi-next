@@ -1,0 +1,29 @@
+- id: "grafana:protected"
+  upstream:
+    preserve_host: true
+    url: "http://grafana"
+  match:
+    url: "https://dash.${ROOT_DOMAIN}/<**>"
+    methods:
+      - GET
+      - POST
+      - PATCH
+      - DELETE
+      - OPTIONS
+      - HEAD
+  authenticators:
+    - handler: cookie_session
+  mutators:
+    - handler: header
+      config:
+        headers:
+          X-WEBAUTH-NAME: "{{ print .Extra.identity.traits.firstName }} {{ print .Extra.identity.traits.lastName }}"
+          X-WEBAUTH-EMAIL: "{{ print .Extra.identity.traits.email }}"
+          X-WEBAUTH-ROLE: "Viewer"
+          X-WEBAUTH-USER: "{{ print .Subject }}"
+  authorizer:
+    handler: allow
+  errors:
+    - handler: redirect
+      config:
+        to: https://auth.${PREFIX}/v1/sign-in?return-url=https://dash.${PREFIX}

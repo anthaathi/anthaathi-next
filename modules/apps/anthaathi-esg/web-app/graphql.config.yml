@@ -1,0 +1,7 @@
+schema: schema.graphql
+documents: '**/*.graphql'
+extensions:
+  endpoints:
+    "localendpoint":
+      introspect: true
+      url: http://graphql-v2.anthaathi.localhost:4443/graphql

@@ -1,0 +1,61 @@
+{
+  "name": "@anthaathi-internal/config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "wireit",
+    "tsc:check": "wireit"
+  },
+  "main": "./dist/main.umd.cjs",
+  "module": "./dist/main.js",
+  "typings": "./types/public.d.ts",
+  "types": "./types/public.d.ts",
+  "files": [
+    "types"
+  ],
+  "wireit": {
+    "build": {
+      "command": "vite build --mode prod",
+      "dependencies": [
+        "tsc:check"
+      ],
+      "files": [
+        "src/**/*.{ts,tsx}",
+        "tsconfig.json",
+        "vite.config.ts"
+      ],
+      "output": [
+        "dist/**"
+      ]
+    },
+    "tsc:check": {
+      "command": "tsc --build --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "src/**/*.{ts,tsx}",
+        "tsconfig.json"
+      ],
+      "dependencies": [],
+      "output": [
+        "types/**",
+        ".tsbuildinfo"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/convict": "^6.1.4",
+    "@types/convict-format-with-validator": "^6.0.3",
+    "@types/node": "^20.8.4",
+    "convict": "^6.2.4",
+    "convict-format-with-validator": "^6.2.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "wireit": "^0.14.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2
+  }
+}

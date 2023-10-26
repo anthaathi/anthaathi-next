@@ -1,0 +1,47 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.base.schema.json",
+
+  "name": "Anthaathi Container",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:1": {
+      "version": 6
+    },
+    "ghcr.io/devcontainers/features/go:1": {},
+    "ghcr.io/devcontainers-contrib/features/caddy:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "yarn install && go install github.com/mitranim/gow@latest && docker compose -f ./manifests/anthaathi-dev/docker-compose.yml up -d && dotnet tool install --global dotnet-ef && bash tools/upgrade-db.sh",
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+    }
+  },
+
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:$HOME/.dotnet/tools/"
+  },
+
+  "containerEnv": {
+    "PG_FORM_CONNECTION_STRING": "Host=localhost;Database=anthaathi_forms;Username=postgres;Password=pgpassword;Port=1143",
+    "PG_ORGANIZATION_CONNECTION_STRING": "Host=localhost;Database=anthaathi_tenant;Username=postgres;Password=pgpassword;Port=1143"
+  }
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}

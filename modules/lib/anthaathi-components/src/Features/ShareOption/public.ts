@@ -1,0 +1,1 @@
+export { ShareOption} from './index'

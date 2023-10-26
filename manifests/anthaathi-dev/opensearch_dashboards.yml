@@ -1,0 +1,24 @@
+server.host: '0.0.0.0'
+opensearchDashboards.branding:
+  applicationTitle: "Anthaathi Reports"
+  logo:
+    defaultUrl: "https://anthaathi.org/logo.png"
+    darkModeUrl: "https://anthaathi.org/logo.png"
+  loadingLogo:
+    defaultUrl: "https://anthaathi.org/logo.png"
+    darkModeUrl: "https://anthaathi.org/logo.png"
+
+opensearch.hosts: ["https://opensearch-node1:9200", "https://opensearch-node2:9200"]
+opensearch.ssl.verificationMode: none
+opensearch.username: kibanaserver
+opensearch.password: kibanaserver
+opensearch.requestHeadersWhitelist: [authorization, securitytenant, "x-proxy-roles", "x-proxy-user", "x-forwarded-for"]
+opensearch_security.multitenancy.enabled: true
+opensearch_security.multitenancy.tenants.preferred: [Private, Global]
+opensearch_security.readonly_mode.roles: [kibana_read_only]
+# Use this setting if you are running opensearch-dashboards without https
+opensearch_security.cookie.secure: false
+
+#opensearch_security.auth.type: "proxy"
+#opensearch_security.proxycache.user_header: "x-proxy-user"
+#opensearch_security.proxycache.roles_header: "x-proxy-roles"

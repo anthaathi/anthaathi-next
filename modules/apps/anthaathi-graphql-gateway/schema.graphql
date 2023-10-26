@@ -1,0 +1,219 @@
+# This file was generated. Do not edit manually.
+
+schema {
+	query: Query
+	mutation: Mutation
+}
+
+interface Error {
+	message: String!
+}
+
+interface Node {
+	id: ID!
+}
+
+type AddUserToGroupPayload {
+	groupMembership: GroupMembership
+}
+
+type Address implements Node {
+	city: String
+	country: String
+	id: ID!
+	state: String
+	street: String
+	technicalContact: String
+	title: String!
+}
+
+type BaseError implements Error {
+	message: String!
+}
+
+type CreateGroupPayload {
+	group: Group
+}
+
+type CreateUserAndAddToOrganizationPayload {
+	user: UserCore
+}
+
+type Customer implements Node {
+	addresses(after: String, before: String, first: Int, last: Int): CustomerAddressesConnection!
+	company: String
+	email: String
+	firstName: String
+	id: ID!
+	lastName: String
+	phoneNumber: String
+}
+
+type CustomerAddressesConnection {
+	edges: [CustomerAddressesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type CustomerAddressesConnectionEdge {
+	cursor: String!
+	node: Address!
+}
+
+type Group implements Node {
+	data: Json!
+	description: String
+	id: ID!
+	members(after: String, before: String, first: Int, last: Int): GroupMembersConnection!
+	name: String!
+}
+
+type GroupMembersConnection {
+	edges: [GroupMembersConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type GroupMembersConnectionEdge {
+	cursor: String!
+	node: GroupMembership!
+}
+
+type GroupMembership implements Node {
+	id: ID!
+	user: UserCore!
+}
+
+type Mutation {
+	addUserToGroup(input: AddUserToGroupInput!): AddUserToGroupPayload!
+	createGroup(input: CreateGroupInput!): CreateGroupPayload!
+	createUserAndAddToOrganization(input: CreateUserAndAddToOrganizationInput!): CreateUserAndAddToOrganizationPayload!
+}
+
+type PageInfo {
+	endCursor: String
+	hasNextPage: Boolean!
+	hasPreviousPage: Boolean!
+	startCursor: String
+}
+
+type Project implements Node {
+	data: Json!
+	description: String
+	id: ID!
+	name: String!
+	type: ProjectType!
+}
+
+type Query {
+	customer(after: String, before: String, first: Int, last: Int, organization: ID!): QueryCustomerConnection!
+	groups(after: String, before: String, first: Int, last: Int, organization: ID!): QueryGroupsConnection!
+	node(id: ID!): Node
+	nodes(ids: [ID!]!): [Node]!
+	projects(after: String, before: String, first: Int, last: Int, organization: ID!): QueryProjectsConnection!
+	searchUser(after: String, before: String, first: Int, last: Int, query: String!): QuerySearchUserConnection!
+}
+
+type QueryCustomerConnection {
+	edges: [QueryCustomerConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryCustomerConnectionEdge {
+	cursor: String!
+	node: Customer!
+}
+
+type QueryGroupsConnection {
+	edges: [QueryGroupsConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryGroupsConnectionEdge {
+	cursor: String!
+	node: Group!
+}
+
+type QueryProjectsConnection {
+	edges: [QueryProjectsConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryProjectsConnectionEdge {
+	cursor: String!
+	node: Project!
+}
+
+type QuerySearchUserConnection {
+	edges: [QuerySearchUserConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QuerySearchUserConnectionEdge {
+	cursor: String!
+	node: RecentlyContactedUser!
+}
+
+type RecentlyContactedUser implements Node {
+	id: ID!
+	user: UserCore!
+}
+
+type Task implements Node {
+	author: UserCore!
+	data: Json!
+	description: String
+	dueDate: Date
+	emoji: String
+	id: ID!
+	priority: String
+	startDate: Date
+	title: String!
+}
+
+type UserCore implements Node {
+	email: [UserEmail!]!
+	firstName: String
+	id: ID!
+	lastName: String
+}
+
+type UserEmail {
+	email: String!
+	verified: Boolean!
+}
+
+enum OrganizationRole {
+	ADMIN
+	EDITOR
+	VIEWER
+}
+
+enum ProjectType {
+	Task
+}
+
+"A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
+scalar Date
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar Json
+
+input AddUserToGroupInput {
+	groupId: ID!
+	userId: ID!
+}
+
+input CreateGroupInput {
+	data: Json!
+	description: String
+	groupTemplateId: ID!
+	name: String!
+	organizationId: ID!
+}
+
+input CreateUserAndAddToOrganizationInput {
+	email: String!
+	firstName: String!
+	lastName: String!
+	organizationId: ID!
+	role: OrganizationRole!
+}

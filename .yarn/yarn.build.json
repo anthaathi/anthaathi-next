@@ -1,0 +1,52 @@
+{
+  "comment": "This is an auto-generated file, it keeps track of whats been built. This is a local file, don't store this in version control.",
+  "packages": {
+    "modules/tools/react-testing#test": {
+      "checksum": "b9cf3f04c75b7387a0e215cefa44321c8db298fc",
+      "status": "failed",
+      "rerun": true,
+      "command": "build",
+      "exitCode": "2"
+    },
+    "modules/lib/components#test": {
+      "checksum": "f308beef46dad947fc848e1da4bd3974ed82aa13",
+      "status": "succeeded",
+      "rerun": false,
+      "command": "build",
+      "exitCode": "1"
+    },
+    "modules/tools/react-testing#build": {
+      "checksum": "5c9af23e5395bb9c08b539ec9826381ec2e1acb6",
+      "status": "succeeded",
+      "rerun": false,
+      "command": "build"
+    },
+    "modules/lib/components#build": {
+      "checksum": "f308beef46dad947fc848e1da4bd3974ed82aa13",
+      "status": "succeeded",
+      "rerun": false,
+      "command": "build",
+      "exitCode": "1"
+    },
+    "modules/lib/anthaathi-components#build": {
+      "checksum": "8341cd82b6fb74d277cf6f20c6345f573a1d7b1f",
+      "status": "succeeded",
+      "rerun": false,
+      "command": "build",
+      "exitCode": "2"
+    },
+    "modules/lib/anthaathi-components#test": {
+      "checksum": "8341cd82b6fb74d277cf6f20c6345f573a1d7b1f",
+      "status": "failed",
+      "rerun": true,
+      "command": "build",
+      "exitCode": "1"
+    },
+    "modules/apps/anthaathi-auth/anthaathi-auth-web-client#build": {
+      "checksum": "09bb681541bab8b436726cbaec8b9e9544de52bb",
+      "status": "succeeded",
+      "rerun": false,
+      "command": "build"
+    }
+  }
+}

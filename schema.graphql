@@ -1,0 +1,668 @@
+# This file was generated. Do not edit manually.
+
+schema {
+	query: Query
+	mutation: Mutation
+}
+
+interface Error {
+	message: String!
+}
+
+interface Node {
+	id: ID!
+}
+
+type AddReferenceToTaskPayload {
+	task: Task!
+}
+
+type AddUserToGroupPayload {
+	groupMembership: GroupMembership
+}
+
+type Address implements Node {
+	city: String
+	country: String
+	id: ID!
+	landmark: String
+	state: String
+	street: String
+	technicalContact: String
+	title: String!
+	zipCode: String
+}
+
+type AssignUserToTaskPayload {
+	task: Task
+}
+
+type BaseError implements Error {
+	message: String!
+}
+
+type ChangeTaskDueDatePayload {
+	task: Task
+}
+
+type ChangeTaskStatusPayload {
+	task: Task
+}
+
+type CreateCustomerPayload {
+	customer: Customer
+}
+
+type CreateGroupPayload {
+	group: Group
+}
+
+type CreateOrganizationPayload {
+	result: Organization!
+}
+
+type CreateTaskFeedbackPayload {
+	success: Boolean
+}
+
+type CreateTaskPayload {
+	task: Task!
+}
+
+type CreateUserAndAddToOrganizationPayload {
+	user: UserCore
+}
+
+type Customer implements Node {
+	addresses(after: String, before: String, first: Int, last: Int): CustomerAddressesConnection!
+	company: String
+	data: Json
+	email: String
+	firstName: String
+	id: ID!
+	iid: Int!
+	lastName: String
+	name: String!
+	phoneNumber: String
+	template: CustomerTemplate
+}
+
+type CustomerAddressesConnection {
+	edges: [CustomerAddressesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type CustomerAddressesConnectionEdge {
+	cursor: String!
+	node: Address!
+}
+
+type CustomerGroup implements Node {
+	condition: Json
+	customers(after: String, before: String, first: Int, last: Int): CustomerGroupCustomersConnection!
+	description: String
+	id: ID!
+	iid: Int!
+	name: String!
+	type: CustomerGroupType!
+}
+
+type CustomerGroupAssociation implements Node {
+	customer: Customer!
+	group: CustomerGroup!
+	id: ID!
+}
+
+type CustomerGroupCustomersConnection {
+	edges: [CustomerGroupCustomersConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type CustomerGroupCustomersConnectionEdge {
+	cursor: String!
+	node: Customer!
+}
+
+type CustomerTemplate implements Node {
+	config: Json!
+	description: String
+	id: ID!
+	iid: Int!
+	name: String!
+	organization: Organization!
+}
+
+type GlobalSearch implements Node {
+	entityId: String!
+	id: ID!
+	label: String!
+}
+
+type Group implements Node {
+	createdAt: DateTime!
+	data: Json!
+	description: String
+	id: ID!
+	iid: Int!
+	members(after: String, before: String, first: Int, last: Int): GroupMembersConnection!
+	name: String!
+	template: GroupTemplate!
+}
+
+type GroupMembersConnection {
+	edges: [GroupMembersConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type GroupMembersConnectionEdge {
+	cursor: String!
+	node: GroupMembership!
+}
+
+type GroupMembership implements Node {
+	id: ID!
+	user: UserCore!
+}
+
+type GroupTemplate implements Node {
+	config: Json
+	description: String
+	id: ID!
+	iid: Int!
+	name: String!
+}
+
+type InviteUserPayload {
+	success: Boolean!
+}
+
+type Mutation {
+	addReferenceToTask(input: AddReferenceToTaskInput!): AddReferenceToTaskPayload!
+	addUserToGroup(input: AddUserToGroupInput!): AddUserToGroupPayload!
+	assignUserToTask(input: AssignUserToTaskInput!): AssignUserToTaskPayload!
+	changeTaskDueDate(input: ChangeTaskDueDateInput!): ChangeTaskDueDatePayload!
+	changeTaskStatus(input: ChangeTaskStatusInput!): ChangeTaskStatusPayload!
+	createCustomer(input: CreateCustomerInput!): CreateCustomerPayload!
+	createGroup(input: CreateGroupInput!): CreateGroupPayload!
+	createOrganization(input: CreateOrganizationInput!): CreateOrganizationPayload!
+	createTask(input: CreateTaskInput!): CreateTaskPayload!
+	createTaskFeedback(input: CreateTaskFeedbackInput!): CreateTaskFeedbackPayload!
+	createUserAndAddToOrganization(input: CreateUserAndAddToOrganizationInput!): CreateUserAndAddToOrganizationPayload!
+	inviteUser(input: InviteUserInput!): InviteUserPayload!
+	removeUserFromTask(input: RemoveUserFromTaskInput!): RemoveUserFromTaskPayload!
+	updateCustomer(input: UpdateCustomerInput!): UpdateCustomerPayload!
+	updateTaskData(input: UpdateTaskDataInput!): UpdateTaskDataPayload!
+	updateTaskPriority(input: UpdateTaskPriorityInput!): UpdateTaskPriorityPayload!
+}
+
+type Organization implements Node {
+	createdAt: Date!
+	data: Json!
+	description: String
+	id: ID!
+	iid: String!
+	key: String!
+	name: String!
+	updatedAt: Date!
+}
+
+type OrganizationTemplate implements Node {
+	config: Json!
+	description: String
+	id: ID!
+	name: String!
+}
+
+type OrganizationUser implements Node {
+	id: ID!
+	user: UserCore!
+}
+
+type PageInfo {
+	endCursor: String
+	hasNextPage: Boolean!
+	hasPreviousPage: Boolean!
+	startCursor: String
+}
+
+type Project implements Node {
+	data: Json!
+	description: String
+	id: ID!
+	name: String!
+	type: ProjectType!
+}
+
+type Query {
+	customerGroups(after: String, before: String, first: Int, last: Int, organization: ID!): QueryCustomerGroupsConnection!
+	customerTemplates(after: String, before: String, first: Int, last: Int, organization: ID!): QueryCustomerTemplatesConnection!
+	customers(after: String, before: String, customerGroup: ID, first: Int, last: Int, organization: ID!): QueryCustomersConnection!
+	globalSearch(after: String, before: String, first: Int, last: Int, organizationId: ID!, query: String!): QueryGlobalSearchConnection!
+	groupTemplates(after: String, before: String, first: Int, last: Int): QueryGroupTemplatesConnection!
+	groups(after: String, before: String, first: Int, last: Int, orgKey: String, organization: ID): QueryGroupsConnection!
+	node(id: ID!): Node
+	nodes(ids: [ID!]!): [Node]!
+	organizationByKey(key: String!): Organization
+	organizationTemplateById(id: ID): OrganizationTemplate
+	organizationTemplates(after: String, before: String, first: Int, last: Int): QueryOrganizationTemplatesConnection!
+	organizations(after: String, before: String, first: Int, last: Int): QueryOrganizationsConnection!
+	projects(after: String, before: String, first: Int, last: Int, organization: ID!): QueryProjectsConnection!
+	searchCustomer(after: String, before: String, first: Int, last: Int, organizationId: ID!, query: String!): QuerySearchCustomerConnection!
+	searchUser(after: String, before: String, first: Int, last: Int, organizationId: ID!, query: String!): QuerySearchUserConnection!
+	taskStatuses(after: String, before: String, first: Int, last: Int, organization: ID!): QueryTaskStatusesConnection!
+	taskTemplates(after: String, before: String, first: Int, last: Int, organization: ID!): QueryTaskTemplatesConnection!
+	tasks(after: String, assignedTo: [ID!], before: String, customerGroupId: ID, customerId: ID, first: Int, includeCompleted: Boolean, last: Int, organization: ID!, query: String, showOnlyCompleted: Boolean, statusId: ID, templateId: [ID!], templateKey: String): QueryTasksConnection!
+	users(after: String, before: String, first: Int, group: ID, last: Int, org: String): QueryUsersConnection!
+}
+
+type QueryCustomerGroupsConnection {
+	edges: [QueryCustomerGroupsConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryCustomerGroupsConnectionEdge {
+	cursor: String!
+	node: CustomerGroup!
+}
+
+type QueryCustomerTemplatesConnection {
+	edges: [QueryCustomerTemplatesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryCustomerTemplatesConnectionEdge {
+	cursor: String!
+	node: CustomerTemplate!
+}
+
+type QueryCustomersConnection {
+	edges: [QueryCustomersConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryCustomersConnectionEdge {
+	cursor: String!
+	node: Customer!
+}
+
+type QueryGlobalSearchConnection {
+	edges: [QueryGlobalSearchConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryGlobalSearchConnectionEdge {
+	cursor: String!
+	node: GlobalSearch!
+}
+
+type QueryGroupTemplatesConnection {
+	edges: [QueryGroupTemplatesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryGroupTemplatesConnectionEdge {
+	cursor: String!
+	node: GroupTemplate!
+}
+
+type QueryGroupsConnection {
+	edges: [QueryGroupsConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryGroupsConnectionEdge {
+	cursor: String!
+	node: Group!
+}
+
+type QueryOrganizationTemplatesConnection {
+	edges: [QueryOrganizationTemplatesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryOrganizationTemplatesConnectionEdge {
+	cursor: String!
+	node: OrganizationTemplate!
+}
+
+type QueryOrganizationsConnection {
+	edges: [QueryOrganizationsConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryOrganizationsConnectionEdge {
+	cursor: String!
+	node: Organization!
+}
+
+type QueryProjectsConnection {
+	edges: [QueryProjectsConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryProjectsConnectionEdge {
+	cursor: String!
+	node: Project!
+}
+
+type QuerySearchCustomerConnection {
+	edges: [QuerySearchCustomerConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QuerySearchCustomerConnectionEdge {
+	cursor: String!
+	node: SearchResult!
+}
+
+type QuerySearchUserConnection {
+	edges: [QuerySearchUserConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QuerySearchUserConnectionEdge {
+	cursor: String!
+	node: UserCore!
+}
+
+type QueryTaskStatusesConnection {
+	edges: [QueryTaskStatusesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryTaskStatusesConnectionEdge {
+	cursor: String!
+	node: TaskStatus!
+}
+
+type QueryTaskTemplatesConnection {
+	edges: [QueryTaskTemplatesConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryTaskTemplatesConnectionEdge {
+	cursor: String!
+	node: TaskTemplate!
+}
+
+type QueryTasksConnection {
+	edges: [QueryTasksConnectionEdge]!
+	pageInfo: PageInfo!
+	totalCount: Int!
+}
+
+type QueryTasksConnectionEdge {
+	cursor: String!
+	node: Task!
+}
+
+type QueryUsersConnection {
+	edges: [QueryUsersConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type QueryUsersConnectionEdge {
+	cursor: String!
+	node: OrganizationUser!
+}
+
+type RemoveUserFromTaskPayload {
+	success: Boolean
+}
+
+type SearchResult implements Node {
+	customerId: ID!
+	data: Json!
+	id: ID!
+	label: String!
+}
+
+type Task implements Node {
+	assigned(after: String, before: String, first: Int, last: Int): TaskAssignedConnection!
+	author: UserCore!
+	createdAt: Date!
+	customer: Customer
+	data: Json!
+	description: String
+	dueDate: Date
+	emoji: String
+	id: ID!
+	priority: String
+	referredBy(after: String, before: String, first: Int, last: Int): TaskReferredByConnection! @deprecated(reason: "Migrated to V2")
+	referredByV2(after: String, before: String, first: Int, last: Int): TaskReferredByV2Connection!
+	startDate: Date
+	status: TaskStatus
+	statusId: Int
+	template: TaskTemplate!
+	title: String!
+	updatedAt: Date!
+}
+
+type TaskAssignedConnection {
+	edges: [TaskAssignedConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type TaskAssignedConnectionEdge {
+	cursor: String!
+	node: TaskAssignedUser!
+}
+
+type TaskAssignedUser implements Node {
+	assignedAt: Date!
+	id: ID!
+	user: UserCore!
+}
+
+type TaskFeedback implements Node {
+	config: Json!
+	id: ID!
+}
+
+type TaskReferredByConnection {
+	edges: [TaskReferredByConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type TaskReferredByConnectionEdge {
+	cursor: String!
+	node: Customer!
+}
+
+type TaskReferredByV2Connection {
+	edges: [TaskReferredByV2ConnectionEdge]!
+	pageInfo: PageInfo!
+}
+
+type TaskReferredByV2ConnectionEdge {
+	cursor: String!
+	node: TaskRefferedBy!
+}
+
+type TaskRefferedBy implements Node {
+	customer: Customer!
+	id: ID!
+	iid: Int!
+	task: Task!
+}
+
+type TaskStatus implements Node {
+	description: String
+	id: ID!
+	name: String!
+	systemStatus: TaskSystemTask
+}
+
+type TaskTemplate implements Node {
+	config: Json!
+	description: String
+	key: String
+	id: ID!
+	iid: Int!
+	name: String!
+}
+
+type UpdateCustomerPayload {
+	customer: Customer!
+}
+
+type UpdateTaskDataPayload {
+	task: Task!
+}
+
+type UpdateTaskPriorityPayload {
+	task: Task
+}
+
+type UserCore implements Node {
+	email: [UserEmail!]!
+	firstName: String
+	id: ID!
+	lastName: String
+}
+
+type UserEmail {
+	email: String!
+	verified: Boolean!
+}
+
+enum CustomerGroupType {
+	Dynamic
+	Static
+}
+
+enum OrganizationRole {
+	ADMIN
+	EDITOR
+	VIEWER
+}
+
+enum ProjectType {
+	Task
+}
+
+enum TaskSystemTask {
+	Blocked
+	Done
+	InProgress
+	Pending
+	Rejected
+}
+
+"A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
+scalar Date
+
+"A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format."
+scalar DateTime
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar Json
+
+input AddReferenceToTaskInput {
+	customerId: ID!
+	taskId: ID!
+}
+
+input AddUserToGroupInput {
+	groupId: ID!
+	userId: ID!
+}
+
+input AssignUserToTaskInput {
+	taskId: ID!
+	userId: ID!
+}
+
+input ChangeTaskDueDateInput {
+	dueDate: Date
+	startDate: Date
+	taskId: ID!
+}
+
+input ChangeTaskStatusInput {
+	statusId: ID!
+	taskId: ID!
+}
+
+input CreateCustomerInput {
+	company: String
+	customerGroup: ID
+	data: Json
+	email: String
+	firstName: String
+	lastName: String
+	name: String!
+	organization: ID!
+	phoneNumber: String
+	template: ID
+}
+
+input CreateGroupInput {
+	data: Json!
+	description: String
+	groupTemplateId: ID!
+	name: String!
+	orgKey: String
+	organizationId: ID
+}
+
+input CreateOrganizationInput {
+	data: Json!
+	description: String
+	key: String!
+	name: String!
+	templateId: ID!
+}
+
+input CreateTaskFeedbackInput {
+	data: Json!
+	feedbackId: ID!
+}
+
+input CreateTaskInput {
+	customer: ID
+	description: String
+	organizationId: ID!
+	templateId: ID!
+	title: String!
+}
+
+input CreateUserAndAddToOrganizationInput {
+	email: String!
+	firstName: String!
+	lastName: String!
+	organizationId: ID!
+	role: OrganizationRole!
+}
+
+input InviteUserInput {
+	emails: [String!]!
+	orgKey: String
+	organization: ID
+	role: OrganizationRole!
+}
+
+input RemoveUserFromTaskInput {
+	taskId: ID!
+	userId: ID!
+}
+
+input UpdateCustomerInput {
+	company: String
+	data: Json
+	email: String
+	firstName: String
+	id: ID!
+	lastName: String
+	phoneNumber: String
+}
+
+input UpdateTaskDataInput {
+	data: Json!
+	id: ID!
+}
+
+input UpdateTaskPriorityInput {
+	priority: String
+	taskId: ID!
+}

@@ -1,0 +1,670 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"anyOf": [
+		{
+			"$ref": "#/definitions/JSONString"
+		},
+		{
+			"$ref": "#/definitions/JSONNumber"
+		},
+		{
+			"$ref": "#/definitions/JSONBoolean"
+		},
+		{
+			"$ref": "#/definitions/JSONAllOff"
+		},
+		{
+			"$ref": "#/definitions/JSONAnyOff"
+		},
+		{
+			"$ref": "#/definitions/JSONOneOf"
+		},
+		{
+			"$ref": "#/definitions/JSONNot"
+		},
+		{
+			"$ref": "#/definitions/JSONConst"
+		},
+		{
+			"$ref": "#/definitions/JSONRef"
+		},
+		{
+			"$ref": "#/definitions/JSONObject<any>"
+		},
+		{
+			"$ref": "#/definitions/JSONArray<any>"
+		}
+	],
+	"definitions": {
+		"Alignment": {
+			"enum": ["center", "flex-end", "flex-start"],
+			"type": "string"
+		},
+		"CellProps": {
+			"allOf": [
+				{
+					"properties": {
+						"align": {
+							"anyOf": [
+								{
+									"items": {
+										"$ref": "#/definitions/Alignment"
+									},
+									"type": "array"
+								},
+								{
+									"enum": ["center", "flex-end", "flex-start"],
+									"type": "string"
+								}
+							],
+							"description": "Control vertical alignment of individual cell at each breakpoint. Limited proxy for `align-self` CSS property."
+						},
+						"order": {
+							"anyOf": [
+								{
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "Control placement order of cell in flex row at each breakpoint. Proxy for `order` CSS property."
+						},
+						"overrides": {
+							"description": "Overrides for a single cell.",
+							"properties": {
+								"Cell": {
+									"anyOf": [
+										{
+											"properties": {
+												"component": {
+													"anyOf": [
+														{
+															"type": "null"
+														}
+													]
+												},
+												"props": {
+													"anyOf": [
+														{
+															"additionalProperties": {},
+															"type": "object"
+														},
+														{
+															"type": ["null", "object"]
+														}
+													]
+												},
+												"style": {
+													"anyOf": [
+														{
+															"additionalProperties": {},
+															"type": "object"
+														},
+														{
+															"type": ["null", "object"]
+														}
+													]
+												}
+											},
+											"type": "object"
+										},
+										{
+											"allOf": [
+												{
+													"properties": {
+													},
+													"type": "object"
+												}
+											]
+										}
+									]
+								}
+							},
+							"type": "object"
+						},
+						"skip": {
+							"anyOf": [
+								{
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "Control number of columns to offset cell at each breakpoint."
+						},
+						"span": {
+							"anyOf": [
+								{
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "Control number of columns the cell should span."
+						}
+					},
+					"type": "object"
+				},
+				{
+					"properties": {
+						"gridColumns": {
+							"anyOf": [
+								{
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "Number of columns at each breakpoint."
+						},
+						"gridGaps": {
+							"anyOf": [
+								{
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "Gap between rows at each breakpoint."
+						},
+						"gridGutters": {
+							"anyOf": [
+								{
+									"items": {
+										"type": "number"
+									},
+									"type": "array"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "Gap between columns at each breakpoint."
+						},
+						"gridUnit": {
+							"description": "Modify the CSS length unit used to measure columns and rows. Defaults to theme value.",
+							"enum": [
+								"%",
+								"Q",
+								"ch",
+								"cm",
+								"em",
+								"ex",
+								"in",
+								"lh",
+								"mm",
+								"pc",
+								"pt",
+								"px",
+								"rem",
+								"vh",
+								"vmax",
+								"vmin",
+								"vw"
+							],
+							"type": "string"
+						}
+					},
+					"type": "object"
+				}
+			]
+		},
+		"DataSourceDynamic": {
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"type": {
+					"enum": ["dynamic"],
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"DataSourceStatic": {
+			"properties": {
+				"type": {
+					"enum": ["static"],
+					"type": "string"
+				},
+				"values": {
+					"items": {
+						"$ref": "#/definitions/StaticEnum"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
+		},
+		"JSONAllOff": {
+			"properties": {
+				"allOf": {
+					"items": {
+						"$ref": "#/definitions/JSONObject<any>"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
+		},
+		"JSONAnyOff": {
+			"properties": {
+				"anyOf": {
+					"items": {
+						"$ref": "#/definitions/JSONObject<any>"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
+		},
+		"JSONArray<any>": {
+			"properties": {
+				"cellProps": {
+					"$ref": "#/definitions/CellProps"
+				},
+				"condition": {
+					"type": "object",
+					"additionalItems": true
+				},
+				"creatable": {
+					"type": "boolean"
+				},
+				"dataSource": {
+					"anyOf": [
+						{
+							"$ref": "#/definitions/DataSourceDynamic"
+						},
+						{
+							"$ref": "#/definitions/DataSourceStatic"
+						}
+					]
+				},
+				"default": {
+					"items": {},
+					"type": "array"
+				},
+				"disabled": {
+					"type": "boolean"
+				},
+				"format": {
+					"enum": ["panel", "range", "search", "select"],
+					"type": "string"
+				},
+				"items": {
+					"$ref": "#/definitions/JSONSchema<any>"
+				},
+				"labels": {
+					"properties": {
+						"add": {
+							"type": "string"
+						},
+						"remove": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"maxItems": {
+					"type": "number"
+				},
+				"maximum": {
+					"type": "number"
+				},
+				"minItems": {
+					"type": "number"
+				},
+				"minimum": {
+					"type": "number"
+				},
+				"step": {
+					"type": "number"
+				},
+				"title": {
+					"type": "string"
+				},
+				"type": {
+					"enum": ["array"],
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"JSONBoolean": {
+			"properties": {
+				"cellProps": {
+					"$ref": "#/definitions/CellProps"
+				},
+				"condition": {
+					"type": "object",
+					"additionalItems": true
+				},
+				"default": {
+					"type": "boolean"
+				},
+				"description": {
+					"type": "string"
+				},
+				"format": {
+					"enum": ["checkbox", "switch"],
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"type": {
+					"enum": ["boolean"],
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"JSONConst": {
+			"properties": {
+				"const": {
+					"type": ["string", "number"]
+				},
+				"title": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"JSONNot": {
+			"properties": {
+				"not": {
+					"$ref": "#/definitions/JSONObject<any>"
+				}
+			},
+			"type": "object"
+		},
+		"JSONNumber": {
+			"properties": {
+				"cellProps": {
+					"$ref": "#/definitions/CellProps"
+				},
+				"condition": {
+					"type": "object",
+					"additionalItems": true
+				},
+				"default": {
+					"type": "number"
+				},
+				"description": {
+					"type": "string"
+				},
+				"format": {
+					"enum": ["input", "range"],
+					"type": "string"
+				},
+				"maximum": {
+					"type": "number"
+				},
+				"minimum": {
+					"type": "number"
+				},
+				"step": {
+					"type": "number"
+				},
+				"title": {
+					"type": "string"
+				},
+				"type": {
+					"enum": ["number"],
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"JSONObject<any>": {
+			"properties": {
+				"$defs": {
+					"$ref": "#/definitions/Record<string,JSONSchema<any>>"
+				},
+				"cellProps": {
+					"$ref": "#/definitions/CellProps"
+				},
+				"collapsedItems": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"condition": {
+					"type": "object",
+					"additionalItems": true
+				},
+				"expandable": {
+					"type": "boolean"
+				},
+				"format": {
+					"enum": ["tel"],
+					"type": "string"
+				},
+				"initialExpanded": {
+					"type": "boolean"
+				},
+				"properties": {
+					"$ref": "#/definitions/{[x:string]:JSONSchema<any>|undefined;}"
+				},
+				"required": {
+					"items": {
+						"type": ["string", "number"]
+					},
+					"type": "array"
+				},
+				"title": {
+					"type": "string"
+				},
+				"type": {
+					"enum": ["object"],
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"JSONOneOf": {
+			"properties": {
+				"oneOf": {
+					"items": {
+						"$ref": "#/definitions/JSONSchema<any>"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
+		},
+		"JSONRef": {
+			"properties": {
+				"$ref": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"JSONSchema<any>": {
+			"anyOf": [
+				{
+					"$ref": "#/definitions/JSONString"
+				},
+				{
+					"$ref": "#/definitions/JSONNumber"
+				},
+				{
+					"$ref": "#/definitions/JSONBoolean"
+				},
+				{
+					"$ref": "#/definitions/JSONAllOff"
+				},
+				{
+					"$ref": "#/definitions/JSONAnyOff"
+				},
+				{
+					"$ref": "#/definitions/JSONOneOf"
+				},
+				{
+					"$ref": "#/definitions/JSONNot"
+				},
+				{
+					"$ref": "#/definitions/JSONConst"
+				},
+				{
+					"$ref": "#/definitions/JSONRef"
+				},
+				{
+					"$ref": "#/definitions/JSONObject<any>"
+				},
+				{
+					"$ref": "#/definitions/JSONArray<any>"
+				}
+			]
+		},
+		"JSONString": {
+			"properties": {
+				"autoFocus": {
+					"type": "boolean"
+				},
+				"cellProps": {
+					"$ref": "#/definitions/CellProps"
+				},
+				"condition": {
+					"type": "object",
+					"additionalItems": true
+				},
+				"dataSource": {
+					"anyOf": [
+						{
+							"$ref": "#/definitions/DataSourceDynamic"
+						},
+						{
+							"$ref": "#/definitions/DataSourceStatic"
+						}
+					]
+				},
+				"dateFormat": {
+					"type": "string"
+				},
+				"default": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"disabled": {
+					"type": "boolean"
+				},
+				"format": {
+					"enum": [
+						"card",
+						"color",
+						"date",
+						"email",
+						"file",
+						"hidden",
+						"markdown",
+						"password",
+						"radio",
+						"search",
+						"select",
+						"submit",
+						"text",
+						"textarea",
+						"time",
+						"url"
+					],
+					"type": "string"
+				},
+				"formatMaximum": {
+					"type": "string"
+				},
+				"formatMinimum": {
+					"type": "string"
+				},
+				"maxLength": {
+					"type": "number"
+				},
+				"minLength": {
+					"type": "number"
+				},
+				"pattern": {
+					"type": "string"
+				},
+				"prefix": {
+					"type": "string"
+				},
+				"refetchOn": {
+					"items": {
+						"properties": {
+							"fields": {
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							},
+							"type": {
+								"enum": ["change"],
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"type": "array"
+				},
+				"suffix": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"type": {
+					"enum": ["string"],
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"Record<string,JSONSchema<any>>": {
+			"type": "object"
+		},
+		"StaticEnum": {
+			"properties": {
+				"disabled": {
+					"type": "boolean"
+				},
+				"id": {
+					"type": "string"
+				},
+				"image": {
+					"type": "string"
+				},
+				"label": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"{[x:string]:JSONSchema<any>|undefined;}": {
+			"type": "object"
+		}
+	}
+}

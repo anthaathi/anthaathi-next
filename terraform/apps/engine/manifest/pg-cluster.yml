@@ -1,0 +1,19 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${PREFIX}-engine-pg-cluster
+  namespace: "${PREFIX}-engine"
+spec:
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+  replicationSlots:
+    highAvailability:
+      enabled: true
+  bootstrap:
+    initdb:
+      database: engine_db
+      owner: engine_app
+      secret:
+        name: ${PREFIX}-engine-pg-bootstrap-secret

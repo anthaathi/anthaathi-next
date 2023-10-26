@@ -1,0 +1,1 @@
+export { BrandingFooter } from './index';

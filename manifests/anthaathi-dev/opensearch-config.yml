@@ -1,0 +1,27 @@
+---
+_meta:
+  type: "config"
+  config_version: 2
+
+config:
+  dynamic:
+    multitenancy_enabled: true
+    http:
+      anonymous_auth_enabled: false
+      xff:
+        enabled: true
+        internalProxies: '.*'
+        remoteIpHeader: 'x-forwarded-for'
+    authc:
+      proxy_auth_domain:
+        http_enabled: true
+        transport_enabled: true
+        order: 0
+        http_authenticator:
+          type: extended-proxy
+          challenge: false
+          config:
+            user_header: "x-proxy-user"
+            roles_header: "x-proxy-roles"
+        authentication_backend:
+          type: noop

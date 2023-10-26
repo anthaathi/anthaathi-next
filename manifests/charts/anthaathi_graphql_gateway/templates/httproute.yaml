@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: "{{ .Values.prefix }}-gql"
+  labels:
+  {{- include "anthaathi_graphql_gateway.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ .Values.prefix }}-common-gateway
+      namespace: "istio-system"
+  hostnames:
+    - "graphql.{{ .Values.domain }}"
+  rules:
+    - backendRefs:
+        - name: anthaathi-engine-anthaathi-graphql-gateway
+          port: 3000

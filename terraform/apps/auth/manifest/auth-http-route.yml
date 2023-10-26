@@ -1,0 +1,22 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: ${PREFIX}-auth
+  namespace: "${PREFIX}-auth"
+spec:
+  parentRefs:
+    - name: ${PREFIX}-common-gateway
+      namespace: "istio-system"
+  hostnames:
+    - "auth.${BASE_DOMAIN}"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /self-service
+        - path:
+            type: PathPrefix
+            value: /sessions
+      backendRefs:
+        - name: kratos-public
+          port: 80

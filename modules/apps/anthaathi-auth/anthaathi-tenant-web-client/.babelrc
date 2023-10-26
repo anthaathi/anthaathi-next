@@ -1,0 +1,15 @@
+{
+	"plugins": [
+		[
+			"relay",
+			{
+				"language": "typescript",
+				"schema": "../../../../tools/schema.graphql",
+				"src": "./src",
+				"artifactDirectory": "./__generated__",
+				"eagerEsModules": true
+			}
+		],
+		"formatjs"
+	]
+}

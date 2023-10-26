@@ -1,0 +1,47 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: oathkeeper-grafana
+  namespace: ${PREFIX}-engine
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/instance: grafana
+      app.kubernetes.io/name: grafana
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+              subFilter:
+                name: "envoy.filters.http.router"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.ext_authz
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            failure_mode_allow: false
+            http_service:
+              path_prefix: /decisions
+              server_uri:
+                uri: http://authz-oathkeeper-api.${PREFIX}-auth.svc.cluster.local:4456
+                cluster: outbound|4456||authz-oathkeeper-api.${PREFIX}-auth.svc.cluster.local:4456
+                timeout: 10s
+              authorization_request:
+                allowed_headers:
+                  patterns:
+                    - exact: accept
+                    - exact: authorization
+                    - exact: cookie
+                    - exact: content-type
+                    - exact: x-forwarded-for
+                    - exact: x-forwarded-proto
+                    - exact: x-forwarded-host
+              authorization_response:
+                allowed_upstream_headers:
+                  patterns:
+                    - exact: authorization

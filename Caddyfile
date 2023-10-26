@@ -1,0 +1,79 @@
+{
+	admin :7290
+}
+
+http://esg.anthaathi.localhost:4443 {
+	bind 0.0.0.0
+
+	reverse_proxy /self-service/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy /sessions/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy /graphql {
+		to http://localhost:8677
+	}
+
+	reverse_proxy localhost:4491
+}
+
+http://accounts.anthaathi.localhost:4443 {
+	bind 0.0.0.0
+
+	reverse_proxy /self-service/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy /sessions/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy localhost:4444
+}
+
+http://tenant.anthaathi.localhost:4443 {
+	bind 0.0.0.0
+
+	reverse_proxy /self-service/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy /sessions/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy /graphql {
+		to http://localhost:8677
+	}
+
+	reverse_proxy localhost:4446
+}
+
+http://task.anthaathi.localhost:4443 {
+    bind 0.0.0.0
+
+	reverse_proxy /self-service/* {
+		to http://localhost:4433
+	}
+
+	reverse_proxy /sessions/* {
+		to http://localhost:4433
+	}
+
+    reverse_proxy /graphql {
+        to http://localhost:8677
+    }
+
+    reverse_proxy localhost:4451
+}
+
+http://graphql.anthaathi.localhost:4443 {
+	bind 0.0.0.0
+
+	reverse_proxy /graphql {
+		to http://localhost:8677
+	}
+}

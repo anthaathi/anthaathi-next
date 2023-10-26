@@ -1,0 +1,19 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${PREFIX}-auth-pg-cluster
+  namespace: "${PREFIX}-auth"
+spec:
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+  replicationSlots:
+    highAvailability:
+      enabled: true
+  bootstrap:
+    initdb:
+      database: kratos_auth
+      owner: kratos_auth
+      secret:
+        name: ${PREFIX}-auth-pg-bootstrap-secret

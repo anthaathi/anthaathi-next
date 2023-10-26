@@ -1,0 +1,16 @@
+# Define the source and destination repositories
+core.workflow(
+    name = "default",
+    origin = git.origin(
+        url = "git@gitlab.anthaathi.internal:anthaathi/anthaathi-next.git",
+        ref = "main",
+    ),
+    destination = git.github_destination(
+        url = "git@github.com:anthaathi/anthaathi-next.git",
+        fetch = "main",
+        push = "main",
+    ),
+    mode = "SQUASH", # Other options include SQUASH and CHANGE_REQUEST
+    authoring = authoring.pass_thru("Anthaathi Devs <support@anthaathi.co>"),
+    transformations = [], # List transformations here if needed
+)
