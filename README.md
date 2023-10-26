@@ -12,7 +12,10 @@
   </p>
 </div>
 
-[![Open in Coder](https://coder.anthaathi.internal/open-in-coder.svg)](https://coder.anthaathi.internal/templates/kubernetes/workspace?mode=auto&param.cpu=4&param.memory=8&param.git_repo=git%40gitlab.anthaathi.internal%3Aanthaathi%2Fanthaathi-next.git)
+### Highlights
+
+Form Builder
+https://stackblitz.com/edit/stackblitz-starters-9be5dj?file=src%2FApp.tsx
 
 ### Pre-requisites
 
